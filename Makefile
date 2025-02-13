@@ -15,7 +15,7 @@ gen-rpc:
 gen-rpc-all:
 	@SERVICE=${RPC_MOD}; \
 	for svr in "$${SERVICE[@]}"; do \
-		make gen-rpc service=$$svr;
+		make gen-rpc service=$$svr; \
 	done
 
 
@@ -25,6 +25,7 @@ test-rpc:
 
 .PHONY: test-rpc-all
 test-rpc-all:
+	@clear
 	@SERVICE=${RPC_MOD}; \
 	for svr in "$${SERVICE[@]}"; do \
 		make test-rpc service=$$svr;\

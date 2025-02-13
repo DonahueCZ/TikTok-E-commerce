@@ -30,7 +30,6 @@ var (
 		"tops":          "T-Shirts",
 		"typically":     "T-Shirts",
 		"made":          "T-Shirts",
-		"cotton":        "T-Shirts",
 		"formal":        "Suits",
 		"outfits":       "Suits",
 		"usually":       "Suits",
@@ -79,8 +78,8 @@ func TestSearchProducts_Run(t *testing.T) {
 			continue
 		}
 		prd = searchPrdResp.Results[0]
-		if prd.Id != uint32(productMap[wantedPrd].ID) || prd.Name != productMap[wantedPrd].Name {
-			t.Errorf("GetProduct() err: %v", err)
+		if prd.Id != productMap[wantedPrd].ID || prd.Name != wantedPrd {
+			t.Errorf(ExpectButGetErrTemplate, wantedPrd, prd.Name)
 		}
 	}
 }

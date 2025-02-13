@@ -52,15 +52,15 @@ message SearchProductsResp {
 }
 
 message CreateProductReq {
-  Product products = 1;
+  Product product = 1;
 }
 
 message CreateProductResp {
-  uint32 ids = 1;
+  uint32 id = 1;
 }
 
 message DeleteProductReq {
-  uint32 ids = 1;
+  uint32 id = 1;
 }
 
 message DeleteProductResp {
@@ -68,7 +68,7 @@ message DeleteProductResp {
 }
 
 message UpdateProductReq {
-  Product products = 1;
+  Product product = 1;
 }
 
 message UpdateProductResp {

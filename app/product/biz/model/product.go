@@ -40,19 +40,19 @@ func (Product) TableName() string {
 	return ProductTable
 }
 
-type Query struct {
+type Dao struct {
 	ctx context.Context
 	db  *gorm.DB
 }
 
-func NewQuery(ctx context.Context, db *gorm.DB) *Query {
-	return &Query{
+func NewDao(ctx context.Context, db *gorm.DB) *Dao {
+	return &Dao{
 		ctx: ctx,
 		db:  db,
 	}
 }
 
-func (q *Query) GetProductById(id uint32) (product *Product, err error) {
+func (q *Dao) GetProductById(id uint32) (product *Product, err error) {
 	if id == 0 {
 		return nil, errors.New("product id can't be empty")
 	}
@@ -60,17 +60,17 @@ func (q *Query) GetProductById(id uint32) (product *Product, err error) {
 	return
 }
 
-func (q *Query) GetProductsByQuery(query string) (products []*Product, err error) {
+func (q *Dao) GetProductsByQuery(query string) (products []*Product, err error) {
 	err = q.db.WithContext(q.ctx).Where("MATCH(name, description) AGAINST(?)", query).Find(&products).Error
 	return
 }
 
-func (q *Query) GetProductPage(page, pagesize uint32) (products []Product, err error) {
+func (q *Dao) GetProductPage(page, pagesize uint32) (products []Product, err error) {
 	err = q.db.WithContext(q.ctx).Model(&Product{}).Order(Id).Limit(int(pagesize)).Offset(int((page - 1) * pagesize)).Find(&products).Error
 	return
 }
 
-func (q *Query) GetProductPageByCategory(page, pagesize uint32, category *Category) (products []Product, err error) {
+func (q *Dao) GetProductPageByCategory(page, pagesize uint32, category *Category) (products []Product, err error) {
 	if category == nil || category.Name == "" {
 		products, err = q.GetProductPage(page, pagesize)
 		return
@@ -83,7 +83,7 @@ func (q *Query) GetProductPageByCategory(page, pagesize uint32, category *Catego
 	return
 }
 
-func (q *Query) CreateProduct(product *Product) uint32 {
+func (q *Dao) CreateProduct(product *Product) uint32 {
 	if product == nil {
 		return 0
 	}
@@ -93,37 +93,37 @@ func (q *Query) CreateProduct(product *Product) uint32 {
 	return product.ID
 }
 
-func (q *Query) DeleteProduct(product *Product) bool {
+func (q *Dao) DeleteProduct(product *Product) bool {
 	if product == nil {
 		return false
 	}
 	return q.db.WithContext(q.ctx).Delete(product).Error == nil
 }
 
-func (q *Query) UpdateProduct(product *Product) bool {
+func (q *Dao) UpdateProduct(product *Product) bool {
 	if product == nil {
 		return false
 	}
 	return q.db.WithContext(q.ctx).Save(product).Error == nil
 }
 
-type CachedQuery struct {
-	Query
+type CacheDao struct {
+	Dao
 	cache *redis.Client
 }
 
-func NewCachedQuery(ctx context.Context, db *gorm.DB, cache *redis.Client) *CachedQuery {
-	return &CachedQuery{
-		Query: *NewQuery(ctx, db),
+func NewCacheDao(ctx context.Context, db *gorm.DB, cache *redis.Client) *CacheDao {
+	return &CacheDao{
+		Dao:   *NewDao(ctx, db),
 		cache: cache,
 	}
 }
 
-func (cq *CachedQuery) GetCachedProductKey(id uint32) string {
+func (cq *CacheDao) GetCachedProductKey(id uint32) string {
 	return fmt.Sprintf("product:id:%d", id)
 }
 
-func (cq *CachedQuery) GetCachedProduct(id uint32) (product *Product, err error) {
+func (cq *CacheDao) GetCachedProduct(id uint32) (product *Product, err error) {
 	key := cq.GetCachedProductKey(id)
 	results := cq.cache.Get(cq.ctx, key)
 	err = results.Err()
@@ -138,21 +138,21 @@ func (cq *CachedQuery) GetCachedProduct(id uint32) (product *Product, err error)
 	return
 }
 
-func (cq *CachedQuery) SetCachedProduct(id uint32, prdBytes []byte) (err error) {
+func (cq *CacheDao) SetCachedProduct(id uint32, prdBytes []byte) (err error) {
 	key := cq.GetCachedProductKey(id)
 	return cq.cache.Set(cq.ctx, key, prdBytes, time.Hour).Err()
 }
 
-func (cq *CachedQuery) DelCachedProduct(id uint32) error {
+func (cq *CacheDao) DelCachedProduct(id uint32) error {
 	key := cq.GetCachedProductKey(id)
 	return cq.cache.Del(cq.ctx, key).Err()
 }
 
-func (cq *CachedQuery) GetProductById(id uint32) (product *Product, err error) {
+func (cq *CacheDao) GetProductById(id uint32) (product *Product, err error) {
 	product, err = cq.GetCachedProduct(id)
 	// miss cached, then find in db
 	if err != nil {
-		product, err = cq.Query.GetProductById(id)
+		product, err = cq.Dao.GetProductById(id)
 		if err != nil {
 			return nil, err
 		}
@@ -166,11 +166,11 @@ func (cq *CachedQuery) GetProductById(id uint32) (product *Product, err error) {
 	return product, nil
 }
 
-func (cq *CachedQuery) GetProductsByQuery(query string) (products []*Product, err error) {
-	return cq.Query.GetProductsByQuery(query)
+func (cq *CacheDao) GetProductsByQuery(query string) (products []*Product, err error) {
+	return cq.Dao.GetProductsByQuery(query)
 }
 
-func (cq *CachedQuery) GetCachedProductPage(page, pagesize uint32, categoryName string) (products []Product, err error) {
+func (cq *CacheDao) GetCachedProductPage(page, pagesize uint32, categoryName string) (products []Product, err error) {
 	key := fmt.Sprintf("product:category:%s:page:%d:pagesize:%d", categoryName, page, pagesize)
 
 	results := cq.cache.Get(cq.ctx, key)
@@ -186,13 +186,13 @@ func (cq *CachedQuery) GetCachedProductPage(page, pagesize uint32, categoryName 
 	return
 }
 
-func (cq *CachedQuery) SetCachedProductPage(page, pagesize uint32, categoryName string, prdBytes []byte) (err error) {
+func (cq *CacheDao) SetCachedProductPage(page, pagesize uint32, categoryName string, prdBytes []byte) (err error) {
 	key := fmt.Sprintf("product:category:%s:page:%d:pagesize:%d", categoryName, page, pagesize)
 	err = cq.cache.Set(cq.ctx, key, prdBytes, time.Hour).Err()
 	return
 }
 
-func (cq *CachedQuery) GetProductPageByCategory(page, pagesize uint32, category *Category) (products []Product, err error) {
+func (cq *CacheDao) GetProductPageByCategory(page, pagesize uint32, category *Category) (products []Product, err error) {
 	if page <= 0 || pagesize <= 0 {
 		return nil, errors.New("page and pagesize must be positive")
 	}
@@ -200,7 +200,7 @@ func (cq *CachedQuery) GetProductPageByCategory(page, pagesize uint32, category 
 		products, err = cq.GetCachedProductPage(page, pagesize, category.Name)
 	}
 	if category == nil || err != nil {
-		products, err = cq.Query.GetProductPageByCategory(page, pagesize, category)
+		products, err = cq.Dao.GetProductPageByCategory(page, pagesize, category)
 		if err != nil {
 			return nil, err
 		}
@@ -217,8 +217,8 @@ func (cq *CachedQuery) GetProductPageByCategory(page, pagesize uint32, category 
 	return products, nil
 }
 
-func (cq *CachedQuery) CreateProduct(product *Product) (id uint32) {
-	id = cq.Query.CreateProduct(product)
+func (cq *CacheDao) CreateProduct(product *Product) (id uint32) {
+	id = cq.Dao.CreateProduct(product)
 	if id == 0 {
 		return id
 	}
@@ -229,8 +229,8 @@ func (cq *CachedQuery) CreateProduct(product *Product) (id uint32) {
 	return id
 }
 
-func (cq *CachedQuery) DeleteProduct(product *Product) bool {
-	flag := cq.Query.DeleteProduct(product)
+func (cq *CacheDao) DeleteProduct(product *Product) bool {
+	flag := cq.Dao.DeleteProduct(product)
 	if !flag {
 		return flag
 	}
@@ -240,8 +240,8 @@ func (cq *CachedQuery) DeleteProduct(product *Product) bool {
 	return flag
 }
 
-func (cq *CachedQuery) UpdateProduct(product *Product) bool {
-	flag := cq.Query.UpdateProduct(product)
+func (cq *CacheDao) UpdateProduct(product *Product) bool {
+	flag := cq.Dao.UpdateProduct(product)
 	if !flag {
 		return flag
 	}

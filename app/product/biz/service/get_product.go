@@ -20,7 +20,7 @@ func NewGetProductService(ctx context.Context) *GetProductService {
 func (s *GetProductService) Run(req *product.GetProductReq) (resp *product.GetProductResp, err error) {
 	// Finish your business logic.
 	var prd *model.Product
-	prd, err = model.NewCachedQuery(s.ctx, mysql.DB, redis.RedisClient).GetProductById(req.Id)
+	prd, err = model.NewCacheDao(s.ctx, mysql.DB, redis.RedisClient).GetProductById(req.Id)
 	if err != nil {
 		return nil, err
 	}

@@ -11,6 +11,10 @@ import (
 	"gorm.io/gorm"
 )
 
+const (
+	ExpectButGetErrTemplate = "expected %v, but get %v"
+)
+
 var (
 	ctx          context.Context
 	db           *gorm.DB

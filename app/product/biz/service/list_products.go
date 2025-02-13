@@ -23,15 +23,15 @@ func (s *ListProductsService) Run(req *product.ListProductsReq) (resp *product.L
 	var (
 		products []model.Product
 		category *model.Category
-		cq       = model.NewCachedQuery(s.ctx, mysql.DB.Session(&gorm.Session{}), redis.RedisClient)
+		dao    = model.NewCacheDao(s.ctx, mysql.DB.Session(&gorm.Session{}), redis.RedisClient)
 	)
 	if req.CategoryName != "" {
-		category, err = cq.GetCategoryByName(req.CategoryName)
+		category, err = dao.GetCategoryByName(req.CategoryName)
 		if err != nil {
 			return nil, err
 		}
 	}
-	products, err = cq.GetProductPageByCategory(req.Page, req.PageSize, category)
+	products, err = dao.GetProductPageByCategory(req.Page, req.PageSize, category)
 	if err != nil {
 		return nil, err
 	}

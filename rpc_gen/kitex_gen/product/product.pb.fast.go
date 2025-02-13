@@ -313,7 +313,7 @@ func (x *CreateProductReq) fastReadField1(buf []byte, _type int8) (offset int, e
 	if err != nil {
 		return offset, err
 	}
-	x.Products = &v
+	x.Product = &v
 	return offset, nil
 }
 
@@ -338,7 +338,7 @@ ReadFieldError:
 }
 
 func (x *CreateProductResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.Ids, offset, err = fastpb.ReadUint32(buf, _type)
+	x.Id, offset, err = fastpb.ReadUint32(buf, _type)
 	return offset, err
 }
 
@@ -363,7 +363,7 @@ ReadFieldError:
 }
 
 func (x *DeleteProductReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
-	x.Ids, offset, err = fastpb.ReadUint32(buf, _type)
+	x.Id, offset, err = fastpb.ReadUint32(buf, _type)
 	return offset, err
 }
 
@@ -418,7 +418,7 @@ func (x *UpdateProductReq) fastReadField1(buf []byte, _type int8) (offset int, e
 	if err != nil {
 		return offset, err
 	}
-	x.Products = &v
+	x.Product = &v
 	return offset, nil
 }
 
@@ -646,10 +646,10 @@ func (x *CreateProductReq) FastWrite(buf []byte) (offset int) {
 }
 
 func (x *CreateProductReq) fastWriteField1(buf []byte) (offset int) {
-	if x.Products == nil {
+	if x.Product == nil {
 		return offset
 	}
-	offset += fastpb.WriteMessage(buf[offset:], 1, x.GetProducts())
+	offset += fastpb.WriteMessage(buf[offset:], 1, x.GetProduct())
 	return offset
 }
 
@@ -662,10 +662,10 @@ func (x *CreateProductResp) FastWrite(buf []byte) (offset int) {
 }
 
 func (x *CreateProductResp) fastWriteField1(buf []byte) (offset int) {
-	if x.Ids == 0 {
+	if x.Id == 0 {
 		return offset
 	}
-	offset += fastpb.WriteUint32(buf[offset:], 1, x.GetIds())
+	offset += fastpb.WriteUint32(buf[offset:], 1, x.GetId())
 	return offset
 }
 
@@ -678,10 +678,10 @@ func (x *DeleteProductReq) FastWrite(buf []byte) (offset int) {
 }
 
 func (x *DeleteProductReq) fastWriteField1(buf []byte) (offset int) {
-	if x.Ids == 0 {
+	if x.Id == 0 {
 		return offset
 	}
-	offset += fastpb.WriteUint32(buf[offset:], 1, x.GetIds())
+	offset += fastpb.WriteUint32(buf[offset:], 1, x.GetId())
 	return offset
 }
 
@@ -710,10 +710,10 @@ func (x *UpdateProductReq) FastWrite(buf []byte) (offset int) {
 }
 
 func (x *UpdateProductReq) fastWriteField1(buf []byte) (offset int) {
-	if x.Products == nil {
+	if x.Product == nil {
 		return offset
 	}
-	offset += fastpb.WriteMessage(buf[offset:], 1, x.GetProducts())
+	offset += fastpb.WriteMessage(buf[offset:], 1, x.GetProduct())
 	return offset
 }
 
@@ -932,10 +932,10 @@ func (x *CreateProductReq) Size() (n int) {
 }
 
 func (x *CreateProductReq) sizeField1() (n int) {
-	if x.Products == nil {
+	if x.Product == nil {
 		return n
 	}
-	n += fastpb.SizeMessage(1, x.GetProducts())
+	n += fastpb.SizeMessage(1, x.GetProduct())
 	return n
 }
 
@@ -948,10 +948,10 @@ func (x *CreateProductResp) Size() (n int) {
 }
 
 func (x *CreateProductResp) sizeField1() (n int) {
-	if x.Ids == 0 {
+	if x.Id == 0 {
 		return n
 	}
-	n += fastpb.SizeUint32(1, x.GetIds())
+	n += fastpb.SizeUint32(1, x.GetId())
 	return n
 }
 
@@ -964,10 +964,10 @@ func (x *DeleteProductReq) Size() (n int) {
 }
 
 func (x *DeleteProductReq) sizeField1() (n int) {
-	if x.Ids == 0 {
+	if x.Id == 0 {
 		return n
 	}
-	n += fastpb.SizeUint32(1, x.GetIds())
+	n += fastpb.SizeUint32(1, x.GetId())
 	return n
 }
 
@@ -996,10 +996,10 @@ func (x *UpdateProductReq) Size() (n int) {
 }
 
 func (x *UpdateProductReq) sizeField1() (n int) {
-	if x.Products == nil {
+	if x.Product == nil {
 		return n
 	}
-	n += fastpb.SizeMessage(1, x.GetProducts())
+	n += fastpb.SizeMessage(1, x.GetProduct())
 	return n
 }
 
@@ -1056,15 +1056,15 @@ var fieldIDToName_SearchProductsResp = map[int32]string{
 }
 
 var fieldIDToName_CreateProductReq = map[int32]string{
-	1: "Products",
+	1: "Product",
 }
 
 var fieldIDToName_CreateProductResp = map[int32]string{
-	1: "Ids",
+	1: "Id",
 }
 
 var fieldIDToName_DeleteProductReq = map[int32]string{
-	1: "Ids",
+	1: "Id",
 }
 
 var fieldIDToName_DeleteProductResp = map[int32]string{
@@ -1072,7 +1072,7 @@ var fieldIDToName_DeleteProductResp = map[int32]string{
 }
 
 var fieldIDToName_UpdateProductReq = map[int32]string{
-	1: "Products",
+	1: "Product",
 }
 
 var fieldIDToName_UpdateProductResp = map[int32]string{
