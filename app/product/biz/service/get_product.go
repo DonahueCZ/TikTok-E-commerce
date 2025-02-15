@@ -33,7 +33,11 @@ func (s *GetProductService) Run(req *product.GetProductReq) (resp *product.GetPr
 			Picture:     prd.Picture,
 			Price:       prd.Price,
 			Stock:       prd.Stock,
+			Categories: make([]string, len(prd.Categories)),
 		},
+	}
+	for i, category := range prd.Categories {
+		resp.Product.Categories[i] = category.Name
 	}
 	return
 }

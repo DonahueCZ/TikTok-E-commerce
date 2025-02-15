@@ -7,9 +7,7 @@ import (
 	product "github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/kitex_gen/product"
 )
 
-var (
-	getPrdResp  *product.GetProductResp
-)
+var getPrdResp *product.GetProductResp
 
 func TestGetProduct_Run(t *testing.T) {
 	ctx := context.Background()
@@ -24,6 +22,7 @@ func TestGetProduct_Run(t *testing.T) {
 		if getPrdResp.Product.Id != uint32(wantedPrd.ID) || getPrdResp.Product.Name != wantedPrd.Name {
 			t.Errorf("GetProduct() err: %v", err)
 		}
+		// fmt.Println(getPrdResp.Product.Categories)
 	}
 	_, err = s.Run(&product.GetProductReq{Id: uint32(0)})
 	if err == nil {
