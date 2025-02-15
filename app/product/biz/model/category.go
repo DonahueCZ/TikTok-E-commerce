@@ -27,7 +27,7 @@ func (q *Dao) GetCategoryByName(categoryName string) (category *Category, err er
 	if categoryName == "" {
 		return nil, categoryNotFoundErr
 	}
-	err = q.db.WithContext(q.ctx).Where(&Category{Name: categoryName}).First(&category).Error
+	err = q.db.WithContext(q.ctx).First(&category, &Category{Name: categoryName}).Error
 	return category, err
 }
 
@@ -38,6 +38,24 @@ func (q *Dao) GetOrCreateCategoryByName(categoryName string) (category *Category
 
 	err = q.db.WithContext(q.ctx).FirstOrCreate(&category, &Category{Name: categoryName}).Error
 	return
+}
+
+func (q *Dao) DelUnusedCategory(category *Category) error {
+	if category == nil {
+		return categoryNotFoundErr
+	}
+	var count int64
+	err := q.db.WithContext(q.ctx).Table(ProductCategoryTable).Where(CategoryIdWhereQuery, category.ID).Count(&count).Error
+	if err != nil {
+		return err
+	}
+	if count == 0 {
+		err := q.db.WithContext(q.ctx).Delete(category).Error
+		if err != nil {
+			return err
+		}
+	}
+	return nil
 }
 
 func (cq *CacheDao) GetCachedCategoryKey(categoryName string) string {
@@ -64,6 +82,12 @@ func (cq *CacheDao) SetCachedCategoryByName(categoryName string, categoryBytes [
 	key := cq.GetCachedCategoryKey(categoryName)
 	return cq.cache.Set(cq.ctx, key, categoryBytes, time.Hour).Err()
 }
+
+func (cq *CacheDao) DelCachedCategory(categoryName string) error {
+	key := cq.GetCachedCategoryKey(categoryName)
+	return cq.cache.Del(cq.ctx, key).Err()
+}
+
 
 func (cq *CacheDao) GetCategoryByName(categoryName string) (category *Category, err error) {
 	if categoryName == "" {
@@ -121,4 +145,15 @@ func (cq *CacheDao) GetOrCreateCategoryByName(categoryName string) (category *Ca
 	}
 
 	return category, nil
+}
+
+func (cq *CacheDao) DelUnusedCategory(category *Category) error {
+	err := cq.Dao.DelUnusedCategory(category)
+	if err != nil {
+		return err
+	}
+	if category != nil {
+		cq.DelCachedCategory(category.Name)
+	}
+	return nil
 }

@@ -24,6 +24,7 @@ var (
 	ProductCategoryTable string
 	ProductJoinQuery     string
 	CategoryIdWhereQuery string
+	CategoryPreloadTag  string
 )
 
 type Product struct {
@@ -56,7 +57,7 @@ func (q *Dao) GetProductById(id uint32) (product *Product, err error) {
 	if id == 0 {
 		return nil, errors.New("product id can't be empty")
 	}
-	err = q.db.WithContext(q.ctx).First(&product, id).Error
+	err = q.db.WithContext(q.ctx).Model(&Product{}).Preload(CategoryPreloadTag).First(&product, id).Error
 	return
 }
 
@@ -93,18 +94,22 @@ func (q *Dao) CreateProduct(product *Product) uint32 {
 	return product.ID
 }
 
-func (q *Dao) DeleteProduct(product *Product) bool {
+func (q *Dao) DeleteProduct(product *Product) error {
 	if product == nil {
-		return false
+		return errors.New("product is required")
 	}
-	return q.db.WithContext(q.ctx).Delete(product).Error == nil
+	return q.db.WithContext(q.ctx).Delete(product).Error
 }
 
-func (q *Dao) UpdateProduct(product *Product) bool {
+func (q *Dao) UpdateProduct(product *Product) error {
 	if product == nil {
-		return false
+		return errors.New("product is required")
 	}
-	return q.db.WithContext(q.ctx).Save(product).Error == nil
+	err := q.db.WithContext(q.ctx).Model(&product).Association(CategoryPreloadTag).Replace(product.Categories)
+	if err != nil {
+		return err
+	}
+	return q.db.WithContext(q.ctx).Save(product).Error
 }
 
 type CacheDao struct {
@@ -229,26 +234,30 @@ func (cq *CacheDao) CreateProduct(product *Product) (id uint32) {
 	return id
 }
 
-func (cq *CacheDao) DeleteProduct(product *Product) bool {
-	flag := cq.Dao.DeleteProduct(product)
-	if !flag {
-		return flag
+func (cq *CacheDao) DeleteProduct(product *Product) error {
+	err := cq.Dao.DeleteProduct(product)
+	if err != nil {
+		return err
 	}
 	if product != nil {
 		cq.DelCachedProduct(product.ID)
 	}
-	return flag
+	return err
 }
 
-func (cq *CacheDao) UpdateProduct(product *Product) bool {
-	flag := cq.Dao.UpdateProduct(product)
-	if !flag {
-		return flag
+func (cq *CacheDao) UpdateProduct(product *Product) error {
+	err := cq.Dao.UpdateProduct(product)
+	if err != nil {
+		return err
 	}
 	if product != nil {
-		cq.DelCachedProduct(product.ID)
+		prdBytes, err := json.Marshal(*product)
+		if err != nil {
+			return nil
+		}
+		cq.SetCachedProduct(product.ID, prdBytes)
 	}
-	return flag
+	return err
 }
 
 func init() {
@@ -262,6 +271,7 @@ func init() {
 			field = strings.TrimSpace(field)
 			if s, ok := strings.CutPrefix(field, "many2many:"); ok {
 				ProductCategoryTable = strings.TrimSpace(s)
+				CategoryPreloadTag = prdType.Field(i).Name
 				break
 			}
 		}
