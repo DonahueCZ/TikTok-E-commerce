@@ -86,7 +86,7 @@ func (q *Dao) GetProductPageByCategory(page, pagesize uint32, category *Category
 }
 
 func (q *Dao) CreateProduct(product *Product) uint32 {
-	if product == nil {
+	if product == nil || product.StoreId == 0 || product.Name == "" || product.Description == "" {
 		return 0
 	}
 	if q.db.WithContext(q.ctx).Create(product).Error != nil {

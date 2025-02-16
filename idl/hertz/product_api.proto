@@ -19,6 +19,11 @@ service ProductService {
     rpc GetProductList(GetProductListReq) returns (common.Empty) {
         option (api.get) = "/products";
     }
+
+    rpc CreateProduct(CreateProductReq) returns (common.Empty) {
+        option (api.post) = "/product";
+    }
+
 }
 
 message GetProductReq {
@@ -32,4 +37,15 @@ message SearchProductsReq {
 message GetProductListReq {
     uint32 page = 1 [(api.query) = "page"];
     string category = 2 [(api.query) = "category"];
+}
+
+message CreateProductReq {
+    uint32 store_id = 1 [(api.form) = "store_id"];
+    string name = 2 [(api.form) = "name"];
+    string description = 3 [(api.form) = "description"];
+    string picture = 4 [(api.form) = "picture"];
+    uint32 price = 5 [(api.form) = "price"];
+    uint32 stock = 6 [(api.form) = "stock"];
+    
+    repeated string categories = 7 [(api.form) = "categories"];
 }

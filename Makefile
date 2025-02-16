@@ -38,3 +38,18 @@ gen-api:
 .PHONY: watch
 watch:
 	@cd app/hertz && air
+
+.PHONY: run-service
+run-service:
+	@cd app/${service} && air
+
+.PHONY: bootstrap
+bootstrap:
+	@SERVICE=${RPC_MOD}; \
+	for svr in "$${SERVICE[@]}"; do \
+		make run-service service=$$svr;\
+	done
+
+.PHONY: tidy
+tidy:
+	@go install github.com/air-verse/air@latest

@@ -35,3 +35,8 @@ func _searchproductsMw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _createproductMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}
