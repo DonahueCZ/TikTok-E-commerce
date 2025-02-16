@@ -31,6 +31,7 @@ func (s *SearchProductsService) Run(req *product.SearchProductsReq) (resp *produ
 		resp.Results = append(resp.Results,
 			&product.Product{
 				Id:          prd.ID,
+				StoreId:     prd.StoreId,
 				Name:        prd.Name,
 				Description: prd.Description,
 				Picture:     prd.Picture,

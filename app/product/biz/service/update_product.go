@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"errors"
 
 	"github.com/MelodyDeep/TikTok-E-commerce/app/product/biz/dal/mysql"
 	"github.com/MelodyDeep/TikTok-E-commerce/app/product/biz/dal/redis"
@@ -30,9 +31,13 @@ func (s *UpdateProductService) Run(req *product.UpdateProductReq) (resp *product
 	if err != nil {
 		return nil, err
 	}
+	if prd.StoreId != req.Product.StoreId {
+		return nil, errors.New("unmatched store id when update")
+	}
 	prevCategories = prd.Categories
 	prd = &model.Product{
 		Base:        prd.Base,
+		StoreId:     req.Product.StoreId,
 		Name:        req.Product.Name,
 		Description: req.Product.Description,
 		Picture:     req.Product.Picture,
@@ -41,7 +46,6 @@ func (s *UpdateProductService) Run(req *product.UpdateProductReq) (resp *product
 		Categories:  make([]model.Category, len(req.Product.Categories)),
 	}
 
-	// fmt.Println("budong", req.Product.Categories)
 	for i, categoryName := range req.Product.Categories {
 		// get or create category
 		category, err := dao.GetOrCreateCategoryByName(categoryName)

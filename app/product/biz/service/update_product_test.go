@@ -83,4 +83,16 @@ func TestUpdateProduct_Run(t *testing.T) {
 			t.Errorf("failed to delete unused category")
 		}
 	}
+	// check if evil update operation can be detected
+	_, err = s.Run(&product.UpdateProductReq{
+		Product: &product.Product{
+			Id:         updateCases.ID,
+			StoreId:    1,
+			Name:       updateCases.Name,
+			Categories: category,
+		},
+	})
+	if err == nil {
+		t.Errorf("failed to stop evil update operation")
+	}
 }

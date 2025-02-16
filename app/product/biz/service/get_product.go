@@ -27,6 +27,7 @@ func (s *GetProductService) Run(req *product.GetProductReq) (resp *product.GetPr
 	resp = &product.GetProductResp{
 		Product: &product.Product{
 			Id:          prd.ID,
+			StoreId:     prd.StoreId,
 			Name:        prd.Name,
 			Description: prd.Description,
 			Picture:     prd.Picture,

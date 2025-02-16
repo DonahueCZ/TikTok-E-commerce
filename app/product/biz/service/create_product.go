@@ -26,6 +26,7 @@ func (s *CreateProductService) Run(req *product.CreateProductReq) (resp *product
 		categories  = make([]model.Category, len(req.Product.Categories))
 		tmpCategory *model.Category
 		prd         = &model.Product{
+			StoreId:     req.Product.StoreId,
 			Name:        req.Product.Name,
 			Description: req.Product.Description,
 			Picture:     req.Product.Picture,

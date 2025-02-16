@@ -23,7 +23,7 @@ func (s *ListProductsService) Run(req *product.ListProductsReq) (resp *product.L
 	var (
 		products []model.Product
 		category *model.Category
-		dao    = model.NewCacheDao(s.ctx, mysql.DB.Session(&gorm.Session{}), redis.RedisClient)
+		dao      = model.NewCacheDao(s.ctx, mysql.DB.Session(&gorm.Session{}), redis.RedisClient)
 	)
 	if req.CategoryName != "" {
 		category, err = dao.GetCategoryByName(req.CategoryName)
@@ -43,6 +43,7 @@ func (s *ListProductsService) Run(req *product.ListProductsReq) (resp *product.L
 		resp.Products = append(resp.Products,
 			&product.Product{
 				Id:          prd.ID,
+				StoreId:     prd.StoreId,
 				Name:        prd.Name,
 				Description: prd.Description,
 				Picture:     prd.Picture,

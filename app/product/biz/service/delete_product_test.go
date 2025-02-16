@@ -39,4 +39,20 @@ func TestDeleteProduct_Run(t *testing.T) {
 			t.Errorf("fail to delete product: %v", err)
 		}
 	}
+	// test if evil operation can be stopped
+	for _, prd := range prdList {
+		id := dao.CreateProduct(&prd)
+		if id == 0 {
+			t.Errorf("fail to create test cases")
+			continue
+		}
+		_, err := s.Run(&product.DeleteProductReq{
+			Id: id,
+			StoreId: 1,
+		})
+		if err == nil {
+			t.Errorf("Fail to stop evil operation(store id not matched): %v", err)
+			continue
+		}
+	}
 }

@@ -34,3 +34,7 @@ test-rpc-all:
 .PHONY: gen-api
 gen-api:
 	@cd app/hertz && cwgo server --type HTTP --service hertz --module ${ROOT_MOD}/app/hertz --idl ../../idl/hertz/${service}.proto && go mod tidy
+
+.PHONY: watch
+watch:
+	@cd app/hertz && air
