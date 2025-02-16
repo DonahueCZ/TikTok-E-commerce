@@ -71,6 +71,7 @@ func TestCreateProduct_Run(t *testing.T) {
 		}
 		resp, err := s.Run(&product.CreateProductReq{
 			Product: &product.Product{
+				StoreId:     1,
 				Name:        c.Name,
 				Description: c.Description,
 				Picture:     c.Picture,

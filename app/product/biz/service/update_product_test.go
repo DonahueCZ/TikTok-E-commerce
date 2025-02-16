@@ -2,6 +2,7 @@ package service
 
 import (
 	"context"
+	"fmt"
 	"reflect"
 	"testing"
 
@@ -20,8 +21,10 @@ var (
 		{Name: "category4"},
 	}
 	updateCases = model.Product{
-		Name:       "UpdateTest",
-		Categories: oldCategoryCases,
+		StoreId:     1,
+		Name:        "UpdateTest",
+		Description: "this is a update test",
+		Categories:  oldCategoryCases,
 	}
 )
 
@@ -49,7 +52,9 @@ func TestUpdateProduct_Run(t *testing.T) {
 	resp, err := s.Run(&product.UpdateProductReq{
 		Product: &product.Product{
 			Id:         updateCases.ID,
+			StoreId:    1,
 			Name:       updateCases.Name,
+			Description: updateCases.Description,
 			Categories: category,
 		},
 	})
@@ -67,10 +72,12 @@ func TestUpdateProduct_Run(t *testing.T) {
 		if err != nil {
 			t.Errorf("failed to get category")
 		}
+		// fmt.Println(c)
 		cMap[category.Name] = c
 	}
+	fmt.Println(prd.Categories)
 	for _, category := range prd.Categories {
-		if !reflect.DeepEqual(category, *cMap[category.Name]) {
+		if cMap[category.Name] == nil || !reflect.DeepEqual(category, *cMap[category.Name]) {
 			// fmt.Println(category)
 			// fmt.Println(cMap[category.Name])
 			t.Errorf("failed to update category")

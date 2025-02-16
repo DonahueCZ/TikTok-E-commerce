@@ -42,7 +42,6 @@ func (s *CreateProductService) Run(req *product.CreateProductReq) (resp *product
 		}
 		categories[i] = *tmpCategory
 	}
-
 	// bind categories and product
 	prd.Categories = categories
 

@@ -11,9 +11,9 @@ import (
 )
 
 var prdList = []model.Product{
-	{Name: "apple"},
-	{Name: "banana"},
-	{Name: "juice"},
+	{StoreId: 1, Name: "apple", Description: "apple of test"},
+	{StoreId: 1, Name: "banana", Description: "banana of test"},
+	{StoreId: 1, Name: "juice", Description: "juice of test"},
 }
 
 func TestDeleteProduct_Run(t *testing.T) {
@@ -29,6 +29,7 @@ func TestDeleteProduct_Run(t *testing.T) {
 		}
 		resp, err := s.Run(&product.DeleteProductReq{
 			Id: id,
+			StoreId: 1,
 		})
 		if err != nil || !resp.Success {
 			t.Errorf("DeleteProduct(): %v", err)
@@ -48,7 +49,7 @@ func TestDeleteProduct_Run(t *testing.T) {
 		}
 		_, err := s.Run(&product.DeleteProductReq{
 			Id: id,
-			StoreId: 1,
+			StoreId: 0,
 		})
 		if err == nil {
 			t.Errorf("Fail to stop evil operation(store id not matched): %v", err)

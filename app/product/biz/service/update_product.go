@@ -54,7 +54,10 @@ func (s *UpdateProductService) Run(req *product.UpdateProductReq) (resp *product
 		}
 		prd.Categories[i] = *category
 	}
-	model.NewCacheDao(s.ctx, mysql.DB, redis.RedisClient).UpdateProduct(prd)
+	err = dao.UpdateProduct(prd)
+	if err != nil {
+		return nil, err
+	}
 
 	for _, category := range prevCategories {
 		dao.DelUnusedCategory(&category)
