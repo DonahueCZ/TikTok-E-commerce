@@ -24,11 +24,11 @@ func (h *DeleteProductService) Run(req *product.DeleteProductReq) (resp map[stri
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	//}()
 	// todo edit your code
-	r, err := rpc.ProductClient.DeleteProduct(h.Context, &rpcProduct.DeleteProductReq{Id: req.ProductId, StoreId: req.StoreId})
+	res, err := rpc.ProductClient.DeleteProduct(h.Context, &rpcProduct.DeleteProductReq{Id: req.ProductId, StoreId: req.StoreId})
 	if err != nil {
 		return nil, err
 	}
 	return map[string]any{
-		"success": r.Success,
+		"success": res.Success,
 	}, nil
 }

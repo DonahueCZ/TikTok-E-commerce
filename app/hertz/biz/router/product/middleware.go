@@ -50,3 +50,8 @@ func _product0Mw() []app.HandlerFunc {
 	// your code...
 	return nil
 }
+
+func _updateproductMw() []app.HandlerFunc {
+	// your code...
+	return nil
+}

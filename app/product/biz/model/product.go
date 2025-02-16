@@ -24,12 +24,12 @@ var (
 	ProductCategoryTable string
 	ProductJoinQuery     string
 	CategoryIdWhereQuery string
-	CategoryPreloadTag  string
+	CategoryPreloadTag   string
 )
 
 type Product struct {
 	Base
-	StoreId 	uint32 `gorm:"index:store_id;not null"`
+	StoreId     uint32 `gorm:"index:store_id;not null"`
 	Name        string `gorm:"index:query,class:FULLTEXT;index:name;type:varchar(64);not null"`
 	Description string `gorm:"index:query,class:FULLTEXT;type:TEXT"`
 	Picture     string
@@ -103,7 +103,7 @@ func (q *Dao) DeleteProduct(product *Product) error {
 }
 
 func (q *Dao) UpdateProduct(product *Product) error {
-	if product == nil {
+	if product == nil || product.StoreId == 0 || product.Name == "" || product.Description == "" {
 		return errors.New("product is required")
 	}
 	err := q.db.WithContext(q.ctx).Model(&product).Association(CategoryPreloadTag).Replace(product.Categories)

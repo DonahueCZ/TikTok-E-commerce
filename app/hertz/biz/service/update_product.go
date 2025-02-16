@@ -9,23 +9,24 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
-type CreateProductService struct {
+type UpdateProductService struct {
 	RequestContext *app.RequestContext
 	Context        context.Context
 }
 
-func NewCreateProductService(Context context.Context, RequestContext *app.RequestContext) *CreateProductService {
-	return &CreateProductService{RequestContext: RequestContext, Context: Context}
+func NewUpdateProductService(Context context.Context, RequestContext *app.RequestContext) *UpdateProductService {
+	return &UpdateProductService{RequestContext: RequestContext, Context: Context}
 }
 
-func (h *CreateProductService) Run(req *product.CreateProductReq) (resp map[string]any, err error) {
+func (h *UpdateProductService) Run(req *product.UpdateProductReq) (resp map[string]any, err error) {
 	//defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	//}()
 	// todo edit your code
-	res, err := rpc.ProductClient.CreateProduct(h.Context, &rpcProduct.CreateProductReq{
+	res, err := rpc.ProductClient.UpdateProduct(h.Context, &rpcProduct.UpdateProductReq{
 		Product: &rpcProduct.Product{
+			Id:          req.Id,
 			StoreId:     req.StoreId,
 			Name:        req.Name,
 			Description: req.Description,
@@ -39,6 +40,6 @@ func (h *CreateProductService) Run(req *product.CreateProductReq) (resp map[stri
 		return nil, err
 	}
 	return map[string]any{
-		"id": res.Id,
+		"success": res.Success,
 	}, nil
 }
