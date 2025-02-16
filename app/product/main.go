@@ -4,6 +4,7 @@ import (
 	"net"
 	"time"
 
+	"github.com/MelodyDeep/TikTok-E-commerce/app/product/biz/dal"
 	"github.com/MelodyDeep/TikTok-E-commerce/app/product/conf"
 	"github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
 	"github.com/cloudwego/kitex/pkg/klog"
@@ -16,6 +17,7 @@ import (
 )
 
 func main() {
+	dal.Init()
 	opts := kitexInit()
 
 	svr := productcatalogservice.NewServer(new(ProductCatalogServiceImpl), opts...)
@@ -45,7 +47,7 @@ func kitexInit() (opts []server.Option) {
 		panic(err)
 	}
 	opts = append(opts, server.WithRegistry(r))
-	
+
 	// klog
 	logger := kitexlogrus.NewLogger()
 	klog.SetLogger(logger)

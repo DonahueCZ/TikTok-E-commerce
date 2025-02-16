@@ -1,0 +1,35 @@
+syntax = "proto3";
+
+package hertz.product;
+
+option go_package = "hertz/product";
+
+import "api.proto";
+import "common.proto";
+
+service ProductService {
+    rpc GetProduct(GetProductReq) returns (common.Empty) {
+        option (api.get) = "/product/:id";
+    }
+
+    rpc SearchProducts(SearchProductsReq) returns (common.Empty) {
+        option (api.get) = "/products/search";
+    }
+
+    rpc GetProductList(GetProductListReq) returns (common.Empty) {
+        option (api.get) = "/products";
+    }
+}
+
+message GetProductReq {
+    uint32 id = 1 [(api.path) = "id"];
+}
+
+message SearchProductsReq {
+    string query = 2 [(api.query) = "query"];
+}
+
+message GetProductListReq {
+    uint32 page = 1 [(api.query) = "page"];
+    string category = 2 [(api.query) = "category"];
+}
