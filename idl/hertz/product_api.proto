@@ -24,10 +24,13 @@ service ProductService {
         option (api.post) = "/product";
     }
 
+    rpc DeleteProduct(DeleteProductReq) returns (common.Empty) {
+        option (api.delete) = "/product/:id";
+    }
 }
 
 message GetProductReq {
-    uint32 id = 1 [(api.path) = "id"];
+    uint32 product_id = 1 [(api.path) = "id"];
 }
 
 message SearchProductsReq {
@@ -48,4 +51,9 @@ message CreateProductReq {
     uint32 stock = 6 [(api.form) = "stock"];
     
     repeated string categories = 7 [(api.form) = "categories"];
+}
+
+message DeleteProductReq {
+    uint32 product_id = 1 [(api.path) = "id"];
+    uint32 store_id = 2;
 }

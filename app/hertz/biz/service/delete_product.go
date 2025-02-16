@@ -9,25 +9,26 @@ import (
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
-type GetProductService struct {
+type DeleteProductService struct {
 	RequestContext *app.RequestContext
 	Context        context.Context
 }
 
-func NewGetProductService(Context context.Context, RequestContext *app.RequestContext) *GetProductService {
-	return &GetProductService{RequestContext: RequestContext, Context: Context}
+func NewDeleteProductService(Context context.Context, RequestContext *app.RequestContext) *DeleteProductService {
+	return &DeleteProductService{RequestContext: RequestContext, Context: Context}
 }
 
-func (h *GetProductService) Run(req *product.GetProductReq) (resp map[string]any, err error) {
+func (h *DeleteProductService) Run(req *product.DeleteProductReq) (resp map[string]any, err error) {
 	//defer func() {
 	// hlog.CtxInfof(h.Context, "req = %+v", req)
 	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
 	//}()
 	// todo edit your code
-	var rpcResp *rpcProduct.GetProductResp
-	rpcResp, err = rpc.ProductClient.GetProduct(h.Context, &rpcProduct.GetProductReq{Id: req.ProductId})
+	r, err := rpc.ProductClient.DeleteProduct(h.Context, &rpcProduct.DeleteProductReq{Id: req.ProductId, StoreId: req.StoreId})
 	if err != nil {
 		return nil, err
 	}
-	return map[string]any{"product": rpcResp.Product}, nil
+	return map[string]any{
+		"success": r.Success,
+	}, nil
 }
