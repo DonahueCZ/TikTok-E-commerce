@@ -21,7 +21,8 @@ func NewAddItemService(ctx context.Context) *AddItemService {
 // Run create note info
 func (s *AddItemService) Run(req *cart.AddItemReq) (resp *cart.AddItemResp, err error) {
 	// Finish your business logic.
-	productResp, err := rpc.ProductCilent.GetProduct(s.ctx, &product.GetProductReq{Id: req.ProductId})
+	// productResp, err := rpc.ProductCilent.GetProduct(s.ctx, &product.GetProductReq{Id: req.ProductId})
+	productResp, err := rpc.ProductClient.GetProduct(s.ctx, &product.GetProductReq{Id: req.Item.ProductId})
 	if err != nil {
 		return nil, err
 	}

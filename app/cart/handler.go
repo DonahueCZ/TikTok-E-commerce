@@ -2,8 +2,9 @@ package main
 
 import (
 	"context"
-	cart "github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/kitex_gen/cart"
+
 	"github.com/MelodyDeep/TikTok-E-commerce/app/cart/biz/service"
+	cart "github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/kitex_gen/cart"
 )
 
 // CartServiceImpl implements the last service interface defined in the IDL.
