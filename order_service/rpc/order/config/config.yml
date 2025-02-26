@@ -1,0 +1,6 @@
+ListenOn: 0.0.0.0:8888
+ServiceName: order.service
+EtcdHost: localhost:2379
+DataSource: order:123456@tcp(localhost:3306)/orderdb?charset=utf8mb4&parseTime=True&loc=Local
+CacheHost: localhost:6379
+LogDir: "./log"
