@@ -5,6 +5,7 @@ package mysql
 import (
 	"fmt"
 
+	"github.com/MelodyDeep/TikTok-E-commerce/app/cart/biz/model"
 	"github.com/MelodyDeep/TikTok-E-commerce/app/cart/conf"
 
 	"gorm.io/driver/mysql"
@@ -26,6 +27,7 @@ func Init() {
 			SkipDefaultTransaction: true,
 		},
 	)
+	DB.AutoMigrate(&model.Cart{})
 	if err != nil {
 		panic(err)
 	}

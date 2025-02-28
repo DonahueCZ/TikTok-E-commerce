@@ -4,6 +4,7 @@ package cartservice
 
 import (
 	"context"
+	// "github.com/MelodyDeep/TikTok-E-commerce/app/hertz/hertz_gen/hertz/cart"
 	cart "github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/kitex_gen/cart"
 	client "github.com/cloudwego/kitex/client"
 	callopt "github.com/cloudwego/kitex/client/callopt"
@@ -15,6 +16,7 @@ type Client interface {
 	GetCart(ctx context.Context, Req *cart.GetCartReq, callOptions ...callopt.Option) (r *cart.GetCartResp, err error)
 	EmptyCart(ctx context.Context, Req *cart.EmptyCartReq, callOptions ...callopt.Option) (r *cart.EmptyCartResp, err error)
 }
+
 
 // NewClient creates a client for the service defined in IDL.
 func NewClient(destService string, opts ...client.Option) (Client, error) {

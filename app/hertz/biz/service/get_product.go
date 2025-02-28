@@ -30,6 +30,7 @@ func (h *GetProductService) Run(req *product.GetProductReq) (resp map[string]any
 	if err != nil {
 		return nil, err
 	}
+	
 	fmt.Println(rpcResp.Product)
 	return map[string]any{"product": rpcResp.Product}, nil
 }

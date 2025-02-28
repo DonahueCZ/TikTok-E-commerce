@@ -5,7 +5,7 @@ import (
 	"net"
 	"time"
 
-	"github.com/MelodyDeep/TikTok-E-commerce/app/cart/biz/dal/mysql"
+	"github.com/MelodyDeep/TikTok-E-commerce/app/cart/biz/dal"
 	"github.com/MelodyDeep/TikTok-E-commerce/app/cart/conf"
 	"github.com/MelodyDeep/TikTok-E-commerce/app/hertz/biz/infra/rpc"
 	"github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/kitex_gen/cart/cartservice"
@@ -21,7 +21,7 @@ import (
 
 func main() {
 	_ = godotenv.Load()
-	mysql.Init()
+	dal.Init()
 	rpc.InitClient()
 
 	opts := kitexInit()
