@@ -47,7 +47,8 @@ func CreateOrder(ctx context.Context, c *app.RequestContext) {
 	}
 
 	resp := new(order.BaseResponse)
-
+	resp.Code = 200
+	resp.Message = "ok"
 	c.JSON(consts.StatusOK, resp)
 }
 
