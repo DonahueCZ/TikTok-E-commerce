@@ -1,8 +1,9 @@
 go 1.23.5
 
 use (
+	./app/cart
 	./app/hertz
 	./app/order
-
+	./app/product
 	./rpc_gen
 )

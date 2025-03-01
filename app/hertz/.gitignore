@@ -34,3 +34,5 @@ _testmain.go
 /output
 *.local.yml
 log
+/tmp
+main
