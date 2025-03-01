@@ -1,5 +1,0 @@
-Host: "0.0.0.0"
-Port: 8080
-EtcdHost: "localhost:2379"
-OrderServiceName: "order.service"
-LogDir: "./log"
