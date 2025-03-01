@@ -12,6 +12,7 @@ replace (
 require (
 	github.com/MelodyDeep/TikTok-E-commerce/common v0.0.0-00010101000000-000000000000
 	github.com/MelodyDeep/TikTok-E-commerce/rpc_gen v0.0.0-00010101000000-000000000000
+	github.com/apache/thrift v0.16.0
 	github.com/cloudwego/hertz v0.9.5
 	github.com/cloudwego/kitex v0.12.1
 	github.com/hertz-contrib/cors v0.1.0
@@ -19,6 +20,7 @@ require (
 	github.com/hertz-contrib/logger/accesslog v0.0.0-20241107070745-e4ce8c54dd97
 	github.com/hertz-contrib/logger/logrus v1.0.1
 	github.com/hertz-contrib/pprof v0.1.2
+	github.com/kitex-contrib/registry-etcd v0.2.5
 	github.com/kr/pretty v0.3.1
 	github.com/redis/go-redis/v9 v9.7.0
 	go.uber.org/zap v1.27.0
@@ -62,7 +64,6 @@ require (
 	github.com/jinzhu/inflection v1.0.0 // indirect
 	github.com/jinzhu/now v1.1.5 // indirect
 	github.com/json-iterator/go v1.1.12 // indirect
-	github.com/kitex-contrib/registry-etcd v0.2.5 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.4 // indirect
 	github.com/kr/text v0.2.0 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
