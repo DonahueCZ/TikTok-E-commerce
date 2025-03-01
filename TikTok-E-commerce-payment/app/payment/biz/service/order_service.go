@@ -1,7 +1,9 @@
 package service
 
 import (
-	"TikTok-E-commerce/internal/payment/repository"
+	"TikTok-E-commerce-payment/app/payment/biz/dal/mysql"
+	"TikTok-E-commerce-payment/app/payment/biz/models"
+	"context"
 )
 
 // OrderService 定义了订单业务逻辑的接口
@@ -17,11 +19,11 @@ type OrderService interface {
 }
 
 type orderService struct {
-	orderRepo repository.OrderRepository
+	orderRepo mysql.OrderRepository
 }
 
 // NewOrderService 作为构造函数
-func NewOrderService(orderRepo repository.OrderRepository) OrderService {
+func NewOrderService(orderRepo mysql.OrderRepository) OrderService {
 	return &orderService{
 		orderRepo: orderRepo,
 	}

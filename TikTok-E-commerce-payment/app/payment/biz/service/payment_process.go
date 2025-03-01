@@ -1,33 +1,47 @@
 package service
 
-// 负责发起支付
-
 import (
-	"TikTok-E-commerce-payment/app/payment/biz/transaction"
+	"TikTok-E-commerce-payment/app/payment/biz/models"
 	"context"
+	"errors"
+
+	"TikTok-E-commerce-payment/app/payment/biz/payment_gateway" // ✅ 确保正确导入
 )
 
-func (s *orderService) ProcessPayment(ctx context.Context, req *payment.PaymentRequest) (*payment.PaymentResponse, error) {
-	// 1. 验证订单
-	if !s.ValidateOrder(req.OrderId) {
-		return &payment.PaymentResponse{Status: "fail", Message: "无效订单"}, nil
+// ProcessPayment 处理支付
+func (s *orderService) ProcessPayment(ctx context.Context, payment *models.Payment) (*models.Payment, error) {
+	// 1. 查询订单
+	order, err := s.orderRepo.GetOrderByID(ctx, payment.OrderID)
+	if err != nil || order == nil {
+		return nil, errors.New("订单不存在")
 	}
 
-	// 2. 获取订单信息并验证
-	order, err := s.orderRepo.GetOrderByID(ctx, req.OrderId)
+	// 2. 获取支付方式
+	factory := payment_gateway.NewPaymentFactory() // ✅ 确保正确调用
+	strategy, err := factory.GetPaymentStrategy(order.PaymentMethod)
 	if err != nil {
-		return &payment.PaymentResponse{Status: "fail", Message: "订单查询失败"}, err
+		return nil, err
 	}
 
-	if order.Status != "pending" {
-		return &payment.PaymentResponse{Status: "fail", Message: "订单不可支付"}, nil
+	// 3. 调用支付接口
+	paymentReq := payment_gateway.PaymentRequest{ // ✅ 确保使用正确的 struct
+		OrderID:     order.OrderID,
+		Amount:      order.Amount,
+		PaymentType: order.PaymentMethod,
 	}
 
-	// 3. 执行支付事务
-	err = transaction.ProcessPaymentTransaction(ctx, s.db, order, req)
+	_, err = strategy.Pay(paymentReq)
 	if err != nil {
-		return &payment.PaymentResponse{Status: "fail", Message: "支付失败"}, err
+		return nil, err
 	}
 
-	return &payment.PaymentResponse{Status: "success", Message: "支付处理成功"}, nil
+	// 4. 更新订单状态
+	err = s.orderRepo.UpdateOrderStatus(ctx, payment.OrderID, "paid")
+	if err != nil {
+		return nil, err
+	}
+
+	// 5. 返回支付成功信息
+	payment.Status = "paid"
+	return payment, nil
 }

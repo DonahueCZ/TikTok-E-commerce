@@ -1,21 +1,26 @@
 package service
 
-// 负责用户主动取消支付
+import (
+	"context"
+	"errors"
+)
 
-import "context"
-
+// CancelPayment 取消支付
 func (s *orderService) CancelPayment(ctx context.Context, orderID string) error {
 	// 1. 查询订单
 	order, err := s.orderRepo.GetOrderByID(ctx, orderID)
-	if err != nil || order == nil {
+	if err != nil {
 		return err
 	}
+	if order == nil {
+		return errors.New("订单不存在")
+	}
 
-	// 2. 检查订单状态
-	if order.Status == "已支付" {
+	// 2. 订单已经支付，无法取消
+	if order.Status == "paid" {
 		return errors.New("订单已支付，无法取消")
 	}
 
-	// 3. 更新订单状态
-	return s.orderRepo.UpdateOrderStatus(ctx, orderID, "已取消")
+	// 3. 更新订单状态为 "canceled"
+	return s.orderRepo.UpdateOrderStatus(ctx, orderID, "canceled")
 }

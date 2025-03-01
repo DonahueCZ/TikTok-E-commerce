@@ -1,0 +1,59 @@
+syntax = "proto3";
+
+package orderservice;
+
+option go_package = "TikTok-E-commerce-payment/kitex_gen/orderservice";
+
+// 订单服务
+service OrderService {
+  rpc CreateOrder(CreateOrderRequest) returns (CreateOrderResponse);
+  rpc GetOrderByID(GetOrderRequest) returns (GetOrderResponse);
+  rpc UpdateOrderStatus(UpdateOrderStatusRequest) returns (UpdateOrderStatusResponse);
+  rpc DeleteOrder(DeleteOrderRequest) returns (DeleteOrderResponse);
+}
+
+// ✅ 订单创建请求
+message CreateOrderRequest {
+  string order_id = 1;
+  double amount = 2;
+  string status = 3;
+}
+
+// ✅ 订单创建响应
+message CreateOrderResponse {
+  string order_id = 1;
+  string status = 2;
+}
+
+// ✅ 查询订单请求
+message GetOrderRequest {
+  string order_id = 1;
+}
+
+// ✅ 查询订单响应
+message GetOrderResponse {
+  string order_id = 1;
+  double amount = 2;
+  string status = 3;
+}
+
+// ✅ 更新订单状态请求
+message UpdateOrderStatusRequest {
+  string order_id = 1;
+  string new_status = 2;
+}
+
+// ✅ 更新订单状态响应
+message UpdateOrderStatusResponse {
+  string status = 1;
+}
+
+// ✅ 删除订单请求
+message DeleteOrderRequest {
+  string order_id = 1;
+}
+
+// ✅ 删除订单响应
+message DeleteOrderResponse {
+  string status = 1;
+}

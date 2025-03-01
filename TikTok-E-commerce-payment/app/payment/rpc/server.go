@@ -2,23 +2,24 @@ package rpc
 
 import (
 	"TikTok-E-commerce-payment/app/payment/handler"
-	"TikTok-E-commerce-payment/kitex_gen/payment_proto_idl/idl/paymentservice/paymentservice"
+	"TikTok-E-commerce-payment/kitex_gen/paymentservice"
 	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/cloudwego/kitex/server"
+	"net"
 )
 
-// NewPaymentService 创建一个新的 PaymentService 实例
-func NewPaymentService() *handler.OrderHandler {
-	return handler.NewOrderHandler()
-}
-
-// StartRPCServer 启动一个新的 Kitex RPC 服务
+// ✅ 启动 Kitex RPC 服务器
 func StartRPCServer() {
-	// 设置 Kitex 服务
-	svr := paymentservice.NewServer(NewPaymentService())
+	addr, _ := net.ResolveTCPAddr("tcp", ":8000") // 监听 8000 端口
 
-	// 启动服务
-	err := svr.Run()
-	if err != nil {
-		klog.Fatalf("启动 RPC 服务失败: %v", err)
+	svr := paymentservice.NewServer(
+		handler.NewOrderHandler(), // 绑定 Handler
+		server.WithServiceAddr(addr),
+	)
+
+	klog.Infof("RPC 服务器启动: %v", addr)
+
+	if err := svr.Run(); err != nil {
+		klog.Fatalf("RPC 服务器启动失败: %v", err)
 	}
 }

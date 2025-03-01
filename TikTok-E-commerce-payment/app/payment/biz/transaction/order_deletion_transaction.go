@@ -21,9 +21,5 @@ func DeleteOrderTransaction(ctx context.Context, db *gorm.DB, orderID string) er
 		return err
 	}
 
-	// 恢复库存或其他逻辑
-	// TODO: 根据需求处理相关逻辑
-
-	// 提交事务
 	return tx.Commit().Error
 }

@@ -1,7 +1,7 @@
 package rpc
 
 import (
-	"TikTok-E-commerce-payment/kitex_gen/payment_proto_idl/idl/paymentservice/paymentservice"
+	"TikTok-E-commerce-payment/kitex_gen/paymentservice/paymentservice"
 	"context"
 	"testing"
 )

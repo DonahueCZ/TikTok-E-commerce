@@ -2,6 +2,7 @@
 package paymentservice
 
 import (
+	paymentservice2 "TikTok-E-commerce-payment/kitex_gen/paymentservice"
 	server "github.com/cloudwego/kitex/server"
 )
 
@@ -12,12 +13,12 @@ func NewServer(handler PaymentService, opts ...server.Option) server.Server {
 	options = append(options, opts...)
 
 	svr := server.NewServer(options...)
-	if err := svr.RegisterService(serviceInfo(), handler); err != nil {
+	if err := svr.RegisterService(paymentservice2.serviceInfo(), handler); err != nil {
 		panic(err)
 	}
 	return svr
 }
 
 func RegisterService(svr server.Server, handler PaymentService, opts ...server.RegisterOption) error {
-	return svr.RegisterService(serviceInfo(), handler, opts...)
+	return svr.RegisterService(paymentservice2.serviceInfo(), handler, opts...)
 }

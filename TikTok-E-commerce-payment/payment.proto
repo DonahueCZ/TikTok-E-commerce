@@ -2,72 +2,46 @@ syntax = "proto3";
 
 package paymentservice;
 
-// 为了生成 Go 代码，指定 Go 包路径
-option go_package = "payment_proto_idl/idl/paymentservice;paymentservice";
+option go_package = "TikTok-E-commerce-payment/kitex_gen/paymentservice";
 
-// 服务定义
+// 支付服务
 service PaymentService {
-  // 处理支付请求
-  rpc ProcessPayment(PaymentRequest) returns (PaymentResponse);
-
-  // 取消支付请求
-  rpc CancelPayment(CancelRequest) returns (PaymentResponse);
-
-  // 处理支付超时
-  rpc HandlePaymentTimeout(PaymentTimeoutRequest) returns (PaymentResponse);
-
-  // 获取订单信息
-  rpc GetOrderByID(OrderRequest) returns (OrderResponse);
-
-  // 更新订单状态
-  rpc UpdateOrderStatus(UpdateStatusRequest) returns (PaymentResponse);
-
-  // 删除订单
-  rpc DeleteOrder(DeleteOrderRequest) returns (PaymentResponse);
+  rpc ProcessPayment(ProcessPaymentRequest) returns (ProcessPaymentResponse);
+  rpc CancelPayment(CancelPaymentRequest) returns (CancelPaymentResponse);
+  rpc HandlePaymentTimeout(PaymentTimeoutRequest) returns (PaymentTimeoutResponse);
 }
 
-// 支付请求结构
-message PaymentRequest {
-  string orderId = 1;            // 订单ID
-  double amount = 2;             // 支付金额
-  string paymentMethod = 3;      // 支付方式
+// ✅ 处理支付请求
+message ProcessPaymentRequest {
+  string order_id = 1;
+  double amount = 2;
+  string payment_method = 3;
 }
 
-// 支付响应结构
-message PaymentResponse {
-  string status = 1;            // 状态，例如成功，失败
-  string message = 2;           // 状态消息，成功或失败的原因
+// ✅ 处理支付响应
+message ProcessPaymentResponse {
+  string status = 1;
+  string message = 2;
 }
 
-// 取消支付请求结构
-message CancelRequest {
-  string orderId = 1;           // 订单ID
+// ✅ 取消支付请求
+message CancelPaymentRequest {
+  string order_id = 1;
 }
 
-// 支付超时请求结构
+// ✅ 取消支付响应
+message CancelPaymentResponse {
+  string status = 1;
+  string message = 2;
+}
+
+// ✅ 处理支付超时请求
 message PaymentTimeoutRequest {
-  string orderId = 1;           // 订单ID
+  string order_id = 1;
 }
 
-// 获取订单请求结构
-message OrderRequest {
-  string orderId = 1;           // 订单ID
-}
-
-// 获取订单响应结构
-message OrderResponse {
-  string orderId = 1;           // 订单ID
-  double amount = 2;            // 订单金额
-  string status = 3;            // 订单状态，例如 pending, success, failed
-}
-
-// 更新订单状态请求结构
-message UpdateStatusRequest {
-  string orderId = 1;           // 订单ID
-  string newStatus = 2;         // 新状态
-}
-
-// 删除订单请求结构
-message DeleteOrderRequest {
-  string orderId = 1;           // 订单ID
+// ✅ 处理支付超时响应
+message PaymentTimeoutResponse {
+  string status = 1;
+  string message = 2;
 }
