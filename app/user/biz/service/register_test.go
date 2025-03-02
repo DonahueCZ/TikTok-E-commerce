@@ -2,8 +2,8 @@ package service
 
 import (
 	"context"
+	user "github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/kitex_gen/user"
 	"testing"
-	user "github.com/MelodyDeep/TikTok-E-commerce/app/user/kitex_gen/user"
 )
 
 func TestRegister_Run(t *testing.T) {
