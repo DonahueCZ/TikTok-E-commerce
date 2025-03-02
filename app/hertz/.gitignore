@@ -33,3 +33,7 @@ _testmain.go
 /.vscode
 /output
 *.local.yml
+*.local.yml
+log
+/tmp
+main

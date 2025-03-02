@@ -4,6 +4,9 @@ package router
 
 import (
 	user "github.com/MelodyDeep/TikTok-E-commerce/app/hertz/biz/router/user"
+	order "github.com/MelodyDeep/TikTok-E-commerce/app/hertz/biz/router/order"
+	cart "github.com/MelodyDeep/TikTok-E-commerce/app/hertz/biz/router/cart"
+	product "github.com/MelodyDeep/TikTok-E-commerce/app/hertz/biz/router/product"
 	"github.com/cloudwego/hertz/pkg/app/server"
 )
 
@@ -11,4 +14,8 @@ import (
 func GeneratedRegister(r *server.Hertz) {
 	//INSERT_POINT: DO NOT DELETE THIS LINE!
 	user.Register(r)
+	order.Register(r)
+	cart.Register(r)
+
+	product.Register(r)
 }

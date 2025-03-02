@@ -6,6 +6,7 @@ import (
 	"context"
 	"time"
 
+	"github.com/MelodyDeep/TikTok-E-commerce/app/hertz/biz/infra/rpc"
 	"github.com/MelodyDeep/TikTok-E-commerce/app/hertz/biz/router"
 	"github.com/MelodyDeep/TikTok-E-commerce/app/hertz/conf"
 	"github.com/cloudwego/hertz/pkg/app"
@@ -26,6 +27,7 @@ import (
 func main() {
 	// init dal
 	// dal.Init()
+	rpc.InitClient()
 	address := conf.GetConf().Hertz.Address
 	h := server.New(server.WithHostPorts(address))
 
@@ -36,6 +38,7 @@ func main() {
 		ctx.JSON(consts.StatusOK, utils.H{"ping": "pong"})
 	})
 	router.CustomizedRegister(h)
+
 	router.GeneratedRegister(h)
 
 	h.Spin()

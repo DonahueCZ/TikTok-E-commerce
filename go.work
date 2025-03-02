@@ -1,7 +1,10 @@
 go 1.23.4
 
 use (
- ./app/hertz
- ./app/user
- ./rpc_gen
+	./app/cart
+	./app/hertz
+	./app/order
+	./app/product
+	./app/user
+	./rpc_gen
 )
