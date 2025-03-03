@@ -14,7 +14,7 @@ import (
 	"github.com/cloudwego/kitex/server"
 	"github.com/joho/godotenv"
 	kitexlogrus "github.com/kitex-contrib/obs-opentelemetry/logging/logrus"
-	consul "github.com/kitex-contrib/registry-consul"
+	etcd "github.com/kitex-contrib/registry-etcd"
 	"go.uber.org/zap/zapcore"
 	"gopkg.in/natefinch/lumberjack.v2"
 )
@@ -44,7 +44,8 @@ func kitexInit() (opts []server.Option) {
 	}
 	opts = append(opts, server.WithServiceAddr(addr))
 
-	r, err := consul.NewConsulRegister(conf.GetConf().Registry.RegistryAddress[0])
+	//service registery
+	r, err := etcd.NewEtcdRegistry(conf.GetConf().Registry.RegistryAddress)
 	if err != nil {
 		klog.Fatal(err)
 	}
