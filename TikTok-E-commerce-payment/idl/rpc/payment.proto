@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package rpc.payment;
+
+option go_package = "rpc/payment";
+
+// **支付服务**
+service PaymentService {
+  // **1. 发起支付**
+  rpc ProcessPayment (PaymentRequest) returns (PaymentResponse);
+
+  // **2. 取消支付**
+  rpc CancelPayment (CancelRequest) returns (PaymentResponse);
+
+  // **3. 处理支付超时**
+  rpc HandlePaymentTimeout (PaymentTimeoutRequest) returns (PaymentResponse);
+
+  // **4. 查询订单**
+  rpc GetOrderByID (OrderRequest) returns (OrderResponse);
+
+  // **5. 更新订单状态**
+  rpc UpdateOrderStatus (UpdateStatusRequest) returns (PaymentResponse);
+
+  // **6. 删除订单**
+  rpc DeleteOrder (DeleteOrderRequest) returns (PaymentResponse);
+
+  // **7. 创建订单**
+  rpc CreateOrder (CreateOrderRequest) returns (OrderResponse);
+}
+
+// **消息结构**
+message PaymentRequest {
+  string order_id = 1;
+  double amount = 2;
+  string payment_method = 3;
+}
+
+message PaymentResponse {
+  string status = 1;
+  string message = 2;
+}
+
+message CancelRequest {
+  string order_id = 1;
+}
+
+message PaymentTimeoutRequest {
+  string order_id = 1;
+}
+
+message OrderRequest {
+  string order_id = 1;
+}
+
+message OrderResponse {
+  string order_id = 1;
+  double amount = 2;
+  string status = 3;
+}
+
+message UpdateStatusRequest {
+  string order_id = 1;
+  string new_status = 2;
+}
+
+message DeleteOrderRequest {
+  string order_id = 1;
+}
+
+// **创建订单**
+message CreateOrderRequest {
+  string order_id = 1;
+  double amount = 2;
+  string payment_method = 3;
+}
