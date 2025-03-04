@@ -8,7 +8,6 @@ import (
 	"github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/kitex_gen/cart/cartservice"
 	"github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
 	"github.com/cloudwego/kitex/client"
-	// consul "github.com/kitex-contrib/registry-consul"
 )
 
 var (

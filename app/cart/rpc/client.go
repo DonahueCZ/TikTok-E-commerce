@@ -7,7 +7,7 @@ import (
 	cartutils "github.com/MelodyDeep/TikTok-E-commerce/app/cart/utils"
 	"github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/kitex_gen/product/productcatalogservice"
 	"github.com/cloudwego/kitex/client"
-	consul "github.com/kitex-contrib/registry-consul"
+	etcd "github.com/kitex-contrib/registry-etcd"
 )
 
 var (
@@ -28,7 +28,7 @@ func InitClient() {
 
 func initProductClient() {
 	var opts []client.Option
-	r, err := consul.NewConsulResolver(conf.GetConf().Registry.RegistryAddress[0])
+	r, err := etcd.NewEtcdResolver(conf.GetConf().Registry.RegistryAddress)
 	cartutils.MustHandleError(err)
 	opts = append(opts, client.WithResolver(r))
 
