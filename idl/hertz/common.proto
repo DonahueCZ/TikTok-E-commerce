@@ -2,6 +2,22 @@ syntax = "proto3";
 
 package hertz.common;
 
-option go_package="hertz/common";
+option go_package = "hertz/common";
 
-message Empty {}
+message PaymentOrder {
+  string order_id = 1;
+  double amount = 2;
+  string status = 3;
+  string payment_method = 4;
+  string created_at = 5;
+  string updated_at = 6;
+}
+
+message Payment {
+  string payment_id = 1;
+  string order_id = 2;
+  double amount = 3;
+  string status = 4;
+  string created_at = 5;
+  string updated_at = 6;
+}

@@ -2,10 +2,9 @@ package service
 
 import (
 	"context"
-	"github.com/MelodyDeep/TikTok-E-commerce/app/hertz/hertz_gen/order"
-	"github.com/MelodyDeep/TikTok-E-commerce/app/hertz/rpc_client/order_rpc"
-	"github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/kitex_gen/order_service"
-	orderrpc "github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/rpc/order"
+	"fmt"
+
+	rpcPayment "github.com/MelodyDeep/TikTok-E-commerce/rpc_gen/kitex_gen/payment"
 	"github.com/cloudwego/hertz/pkg/app"
 )
 
@@ -18,33 +17,19 @@ func NewCreateOrderService(Context context.Context, RequestContext *app.RequestC
 	return &CreateOrderService{RequestContext: RequestContext, Context: Context}
 }
 
-func (h *CreateOrderService) Run(req *order.CreateOrderRequest) (resp *order.BaseResponse, err error) {
-	//defer func() {
-	// hlog.CtxInfof(h.Context, "req = %+v", req)
-	// hlog.CtxInfof(h.Context, "resp = %+v", resp)
-	//}()
-	// todo edit your code
-
-	orderrpcclient.InitOrderRpcClient()
-
-	_, err = orderrpc.CreateOrder(h.Context, &order_service.CreateOrderRequest{
-		UserId:     req.UserId,
-		GoodsId:    req.GoodsId,
-		GoodsCount: req.GoodsCount,
-		Cost:       req.Cost,
-		AddresseeInfo: &order_service.AddresseeInfo{
-			Name:    req.Address.Name,
-			Phone:   req.Address.Phone,
-			Address: req.Address.Address,
-		},
-	})
-
+func (h *CreateOrderService) Run(req *rpcPayment.CreateOrderRequest) (*rpcPayment.OrderResponse, error) {
+	// 调用 RPC 层的 CreateOrder 方法
+	rpcClient := rpcPayment.NewPaymentServiceClient("etcd://127.0.0.1:2379/payment") // etcd 地址
+	rpcResp, err := rpcClient.CreateOrder(h.Context, req)
 	if err != nil {
+		fmt.Println("创建订单失败:", err)
 		return nil, err
 	}
 
-	resp = new(order.BaseResponse)
-	resp.Code = 200
-	resp.Message = "ok"
+	// 返回处理后的数据
+	resp := &rpcPayment.OrderResponse{
+		OrderId: rpcResp.OrderId,
+		Status:  rpcResp.Status,
+	}
 	return resp, nil
 }

@@ -1,0 +1,75 @@
+syntax = "proto3";
+
+package hertz.payment;
+
+import "google/protobuf/empty.proto";
+import "api.proto";
+import "common.proto";
+
+option go_package = "hertz/payment";
+
+service PaymentService {
+  rpc CreateOrder(CreateOrderRequest) returns (OrderResponse) {
+    option (hertz.api.post) = "/payment/order/create";
+  }
+  rpc GetOrderByID(GetOrderByIDRequest) returns (OrderResponse) {
+    option (hertz.api.get) = "/payment/order/{order_id}";
+  }
+  rpc UpdateOrderStatus(UpdateOrderStatusRequest) returns (PaymentResponse) {
+    option (hertz.api.post) = "/payment/update_status";
+  }
+  rpc DeleteOrder(DeleteOrderRequest) returns (PaymentResponse) {
+    option (hertz.api.delete) = "/payment/delete";
+  }
+
+  rpc ProcessPayment(ProcessPaymentRequest) returns (PaymentResponse) {
+    option (hertz.api.post) = "/payment/process";
+  }
+  rpc CancelPayment(CancelPaymentRequest) returns (PaymentResponse) {
+    option (hertz.api.post) = "/payment/cancel";
+  }
+  rpc HandlePaymentTimeout(HandlePaymentTimeoutRequest) returns (PaymentResponse) {
+    option (hertz.api.post) = "/payment/timeout";
+  }
+}
+
+message CreateOrderRequest {
+  string order_id = 1;
+  double amount = 2;
+  string payment_method = 3;
+}
+message OrderResponse {
+  string order_id = 1;
+  double amount = 2;
+  string status = 3;
+}
+
+message GetOrderByIDRequest {
+  string order_id = 1;
+}
+
+message UpdateOrderStatusRequest {
+  string order_id = 1;
+  string status = 2;
+}
+
+message DeleteOrderRequest {
+  string order_id = 1;
+}
+
+message ProcessPaymentRequest {
+  string order_id = 1;
+  double amount = 2;
+  string payment_method = 3;
+}
+message PaymentResponse {
+  string status = 1;
+  string message = 2;
+}
+
+message CancelPaymentRequest {
+  string order_id = 1;
+}
+message HandlePaymentTimeoutRequest {
+  string order_id = 1;
+}
