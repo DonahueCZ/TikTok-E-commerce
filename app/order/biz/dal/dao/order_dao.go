@@ -3,6 +3,7 @@ package dao
 import (
 	"context"
 	"errors"
+
 	"github.com/MelodyDeep/TikTok-E-commerce/app/order/biz/dal"
 	"github.com/MelodyDeep/TikTok-E-commerce/app/order/biz/dal/mysql"
 	"github.com/MelodyDeep/TikTok-E-commerce/app/order/biz/dal/ordermd"
@@ -73,11 +74,14 @@ func (dao *OrderDAO) FindOne(id int64) (*ordermd.Order, error) {
 	if err != nil {
 		return nil, err
 	}
-	if time.Now().Unix()-q.CreateTime > ordermd.ExpireTime {
-		q.Status = ordermd.IsExpire
-		err := dao.Update(q)
-		if err != nil {
-			return nil, err
+	// 检查订单是否为未支付状态且已过期
+	if q.Status == ordermd.IsNotPaid {
+		if time.Now().Unix()-q.CreateTime > ordermd.ExpireTime {
+			q.Status = ordermd.IsExpire
+			err := dao.Update(q)
+			if err != nil {
+				return nil, err
+			}
 		}
 	}
 	// 将从数据库中获取的数据存储到Redis中
@@ -129,10 +133,12 @@ func (dao *OrderDAO) FindByUserId(userId int64, page, pageSize int32) ([]*orderm
 		return nil, err
 	}
 	for _, order := range orders {
-		if time.Now().Unix()-order.CreateTime > ordermd.ExpireTime {
-			err := dao.Update(order)
-			if err != nil {
-				return nil, err
+		if q.Status == ordermd.IsNotPaid {
+			if time.Now().Unix()-order.CreateTime > ordermd.ExpireTime {
+				err := dao.Update(order)
+				if err != nil {
+					return nil, err
+				}
 			}
 		}
 	}
