@@ -1,0 +1,48 @@
+syntax = "proto3";
+
+package rpc.payment_gateway;
+
+import "common.proto";
+
+option go_package = "rpc/payment_gateway";
+
+// **支付网关服务**
+service PaymentGateway {
+  // **创建支付交易**
+  rpc CreatePaymentTransaction (PaymentTransactionRequest) returns (PaymentTransactionResponse);
+
+  // **查询支付状态**
+  rpc GetPaymentStatus (PaymentStatusRequest) returns (PaymentStatusResponse);
+}
+
+// **支付方式**
+enum PaymentMethod {
+  PAYMENT_METHOD_UNSPECIFIED = 0;
+  WECHAT = 1;
+  ALIPAY = 2;
+  BANKCARD = 3;
+}
+
+// **支付交易请求**
+message PaymentTransactionRequest {
+  string order_id = 1;
+  double amount = 2;
+  PaymentMethod payment_method = 3;
+}
+
+// **支付交易响应**
+message PaymentTransactionResponse {
+  string transaction_id = 1;
+  string status = 2;
+}
+
+// **查询支付状态请求**
+message PaymentStatusRequest {
+  string transaction_id = 1;
+}
+
+// **查询支付状态响应**
+message PaymentStatusResponse {
+  string transaction_id = 1;
+  string status = 2; // "pending", "success", "failed"
+}
