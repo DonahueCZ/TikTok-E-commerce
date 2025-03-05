@@ -2,7 +2,10 @@ package main
 
 import (
 	"database/sql"
+<<<<<<< HEAD
 	"gopkg.in/natefinch/lumberjack.v2"
+=======
+>>>>>>> 7e9011ffce652b0d3ffb9a30e2c696ba64e7d62c
 	"net"
 	"time"
 
@@ -39,6 +42,7 @@ func main() {
 	if err != nil {
 		klog.Fatal(err)
 	}
+<<<<<<< HEAD
 
 	asyncWriter := &lumberjack.Logger{
 		Filename:   "logs/payment.log", // ✅ 修改为你自己的日志路径
@@ -47,6 +51,8 @@ func main() {
 		MaxAge:     7, // 7天
 	}
 	klog.SetOutput(asyncWriter)
+=======
+>>>>>>> 7e9011ffce652b0d3ffb9a30e2c696ba64e7d62c
 }
 
 // ✅ Kitex 初始化函数

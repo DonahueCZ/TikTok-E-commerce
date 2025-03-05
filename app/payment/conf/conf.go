@@ -1,15 +1,26 @@
 package conf
 
 import (
+<<<<<<< HEAD
 	"github.com/cloudwego/hertz/pkg/common/hlog"
 	"github.com/cloudwego/kitex/pkg/klog"
 	"github.com/kr/pretty"
 	"gopkg.in/validator.v2"
 	"gopkg.in/yaml.v3"
+=======
+>>>>>>> 7e9011ffce652b0d3ffb9a30e2c696ba64e7d62c
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
+<<<<<<< HEAD
+=======
+
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/kr/pretty"
+	"gopkg.in/validator.v2"
+	"gopkg.in/yaml.v3"
+>>>>>>> 7e9011ffce652b0d3ffb9a30e2c696ba64e7d62c
 )
 
 var (
@@ -18,6 +29,7 @@ var (
 )
 
 type Config struct {
+<<<<<<< HEAD
 	Env      string
 	Kitex    Kitex    `yaml:"kitex"`
 	MySQL    MySQL    `yaml:"mysql"`
@@ -43,6 +55,13 @@ type Registry struct {
 	RegistryAddress []string `yaml:"registry_address"`
 	Username        string   `yaml:"username"`
 	Password        string   `yaml:"password"`
+=======
+	Env string
+
+	Hertz Hertz `yaml:"hertz"`
+	MySQL MySQL `yaml:"mysql"`
+	Redis Redis `yaml:"redis"`
+>>>>>>> 7e9011ffce652b0d3ffb9a30e2c696ba64e7d62c
 }
 
 type MySQL struct {
@@ -107,6 +126,7 @@ func GetEnv() string {
 	return e
 }
 
+<<<<<<< HEAD
 // LogLevel 修正类型
 func LogLevel() klog.Level {
 	switch GetConf().Hertz.LogLevel {
@@ -126,5 +146,26 @@ func LogLevel() klog.Level {
 		return klog.LevelFatal
 	default:
 		return klog.LevelInfo
+=======
+func LogLevel() hlog.Level {
+	level := GetConf().Hertz.LogLevel
+	switch level {
+	case "trace":
+		return hlog.LevelTrace
+	case "debug":
+		return hlog.LevelDebug
+	case "info":
+		return hlog.LevelInfo
+	case "notice":
+		return hlog.LevelNotice
+	case "warn":
+		return hlog.LevelWarn
+	case "error":
+		return hlog.LevelError
+	case "fatal":
+		return hlog.LevelFatal
+	default:
+		return hlog.LevelInfo
+>>>>>>> 7e9011ffce652b0d3ffb9a30e2c696ba64e7d62c
 	}
 }
