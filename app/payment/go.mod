@@ -16,6 +16,8 @@ require (
 	github.com/redis/go-redis/v9 v9.7.1
 	go.uber.org/zap v1.27.0
 	google.golang.org/protobuf v1.36.5
+	gopkg.in/validator.v2 v2.0.1
+	gopkg.in/yaml.v3 v3.0.1
 	gorm.io/driver/mysql v1.5.7
 	gorm.io/gorm v1.25.12
 )
@@ -75,9 +77,7 @@ require (
 	google.golang.org/genproto/googleapis/api v0.0.0-20231016165738-49dd2c1f3d0b // indirect
 	google.golang.org/genproto/googleapis/rpc v0.0.0-20231016165738-49dd2c1f3d0b // indirect
 	google.golang.org/grpc v1.59.0 // indirect
-	gopkg.in/check.v1 v1.0.0-20201130134442-10cb98267c6c // indirect
 	gopkg.in/natefinch/lumberjack.v2 v2.2.1 // indirect
-	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
 replace github.com/MelodyDeep/TikTok-E-commerce/rpc_gen => ../../rpc_gen
