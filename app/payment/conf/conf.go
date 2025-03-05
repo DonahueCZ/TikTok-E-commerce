@@ -1,15 +1,15 @@
 package conf
 
 import (
+	"github.com/cloudwego/hertz/pkg/common/hlog"
+	"github.com/cloudwego/kitex/pkg/klog"
+	"github.com/kr/pretty"
+	"gopkg.in/validator.v2"
+	"gopkg.in/yaml.v3"
 	"io/ioutil"
 	"os"
 	"path/filepath"
 	"sync"
-
-	"github.com/cloudwego/hertz/pkg/common/hlog"
-	"github.com/kr/pretty"
-	"gopkg.in/validator.v2"
-	"gopkg.in/yaml.v3"
 )
 
 var (
@@ -18,11 +18,31 @@ var (
 )
 
 type Config struct {
-	Env string
+	Env      string
+	Kitex    Kitex    `yaml:"kitex"`
+	MySQL    MySQL    `yaml:"mysql"`
+	Redis    Redis    `yaml:"redis"`
+	Registry Registry `yaml:"registry"`
+	Database struct {
+		DSN string `yaml:"dsn"`
+	} `yaml:"database"`
+	Hertz Hertz `yaml:"hertz"` // ✅ 确保 Hertz 存在
+}
 
-	Hertz Hertz `yaml:"hertz"`
-	MySQL MySQL `yaml:"mysql"`
-	Redis Redis `yaml:"redis"`
+type Kitex struct {
+	Service       string `yaml:"service"`
+	Address       string `yaml:"address"`
+	LogLevel      string `yaml:"log_level"`
+	LogFileName   string `yaml:"log_file_name"`
+	LogMaxSize    int    `yaml:"log_max_size"`
+	LogMaxBackups int    `yaml:"log_max_backups"`
+	LogMaxAge     int    `yaml:"log_max_age"`
+}
+
+type Registry struct {
+	RegistryAddress []string `yaml:"registry_address"`
+	Username        string   `yaml:"username"`
+	Password        string   `yaml:"password"`
 }
 
 type MySQL struct {
@@ -87,24 +107,24 @@ func GetEnv() string {
 	return e
 }
 
-func LogLevel() hlog.Level {
-	level := GetConf().Hertz.LogLevel
-	switch level {
+// LogLevel 修正类型
+func LogLevel() klog.Level {
+	switch GetConf().Hertz.LogLevel {
 	case "trace":
-		return hlog.LevelTrace
+		return klog.LevelTrace
 	case "debug":
-		return hlog.LevelDebug
+		return klog.LevelDebug
 	case "info":
-		return hlog.LevelInfo
+		return klog.LevelInfo
 	case "notice":
-		return hlog.LevelNotice
+		return klog.LevelNotice
 	case "warn":
-		return hlog.LevelWarn
+		return klog.LevelWarn
 	case "error":
-		return hlog.LevelError
+		return klog.LevelError
 	case "fatal":
-		return hlog.LevelFatal
+		return klog.LevelFatal
 	default:
-		return hlog.LevelInfo
+		return klog.LevelInfo
 	}
 }

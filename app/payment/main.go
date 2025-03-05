@@ -2,6 +2,7 @@ package main
 
 import (
 	"database/sql"
+	"gopkg.in/natefinch/lumberjack.v2"
 	"net"
 	"time"
 
@@ -38,6 +39,14 @@ func main() {
 	if err != nil {
 		klog.Fatal(err)
 	}
+
+	asyncWriter := &lumberjack.Logger{
+		Filename:   "logs/payment.log", // ✅ 修改为你自己的日志路径
+		MaxSize:    100,                // 100MB
+		MaxBackups: 5,
+		MaxAge:     7, // 7天
+	}
+	klog.SetOutput(asyncWriter)
 }
 
 // ✅ Kitex 初始化函数
