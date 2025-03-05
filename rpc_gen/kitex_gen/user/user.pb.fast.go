@@ -537,6 +537,71 @@ func (x *GetUserResp) fastReadField7(buf []byte, _type int8) (offset int, err er
 	return offset, nil
 }
 
+func (x *CheckPermissionMiddlewareReq) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
+	switch number {
+	case 1:
+		offset, err = x.fastReadField1(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	default:
+		offset, err = fastpb.Skip(buf, _type, number)
+		if err != nil {
+			goto SkipFieldError
+		}
+	}
+	return offset, nil
+SkipFieldError:
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+ReadFieldError:
+	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_CheckPermissionMiddlewareReq[number], err)
+}
+
+func (x *CheckPermissionMiddlewareReq) fastReadField1(buf []byte, _type int8) (offset int, err error) {
+	x.UserId, offset, err = fastpb.ReadInt64(buf, _type)
+	return offset, err
+}
+
+func (x *CheckPermissionMiddlewareResp) FastRead(buf []byte, _type int8, number int32) (offset int, err error) {
+	switch number {
+	case 1:
+		offset, err = x.fastReadField1(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	case 2:
+		offset, err = x.fastReadField2(buf, _type)
+		if err != nil {
+			goto ReadFieldError
+		}
+	default:
+		offset, err = fastpb.Skip(buf, _type, number)
+		if err != nil {
+			goto SkipFieldError
+		}
+	}
+	return offset, nil
+SkipFieldError:
+	return offset, fmt.Errorf("%T cannot parse invalid wire-format data, error: %s", x, err)
+ReadFieldError:
+	return offset, fmt.Errorf("%T read field %d '%s' error: %s", x, number, fieldIDToName_CheckPermissionMiddlewareResp[number], err)
+}
+
+func (x *CheckPermissionMiddlewareResp) fastReadField1(buf []byte, _type int8) (offset int, err error) {
+	x.UserPermissions, offset, err = fastpb.ReadInt32(buf, _type)
+	return offset, err
+}
+
+func (x *CheckPermissionMiddlewareResp) fastReadField2(buf []byte, _type int8) (offset int, err error) {
+	var v ResponseStatus
+	offset, err = fastpb.ReadMessage(buf, _type, &v)
+	if err != nil {
+		return offset, err
+	}
+	x.ResponseStatus = &v
+	return offset, nil
+}
+
 func (x *ResponseStatus) FastWrite(buf []byte) (offset int) {
 	if x == nil {
 		return offset
@@ -895,6 +960,47 @@ func (x *GetUserResp) fastWriteField7(buf []byte) (offset int) {
 		return offset
 	}
 	offset += fastpb.WriteMessage(buf[offset:], 7, x.GetResponseStatus())
+	return offset
+}
+
+func (x *CheckPermissionMiddlewareReq) FastWrite(buf []byte) (offset int) {
+	if x == nil {
+		return offset
+	}
+	offset += x.fastWriteField1(buf[offset:])
+	return offset
+}
+
+func (x *CheckPermissionMiddlewareReq) fastWriteField1(buf []byte) (offset int) {
+	if x.UserId == 0 {
+		return offset
+	}
+	offset += fastpb.WriteInt64(buf[offset:], 1, x.GetUserId())
+	return offset
+}
+
+func (x *CheckPermissionMiddlewareResp) FastWrite(buf []byte) (offset int) {
+	if x == nil {
+		return offset
+	}
+	offset += x.fastWriteField1(buf[offset:])
+	offset += x.fastWriteField2(buf[offset:])
+	return offset
+}
+
+func (x *CheckPermissionMiddlewareResp) fastWriteField1(buf []byte) (offset int) {
+	if x.UserPermissions == 0 {
+		return offset
+	}
+	offset += fastpb.WriteInt32(buf[offset:], 1, x.GetUserPermissions())
+	return offset
+}
+
+func (x *CheckPermissionMiddlewareResp) fastWriteField2(buf []byte) (offset int) {
+	if x.ResponseStatus == nil {
+		return offset
+	}
+	offset += fastpb.WriteMessage(buf[offset:], 2, x.GetResponseStatus())
 	return offset
 }
 
@@ -1259,6 +1365,47 @@ func (x *GetUserResp) sizeField7() (n int) {
 	return n
 }
 
+func (x *CheckPermissionMiddlewareReq) Size() (n int) {
+	if x == nil {
+		return n
+	}
+	n += x.sizeField1()
+	return n
+}
+
+func (x *CheckPermissionMiddlewareReq) sizeField1() (n int) {
+	if x.UserId == 0 {
+		return n
+	}
+	n += fastpb.SizeInt64(1, x.GetUserId())
+	return n
+}
+
+func (x *CheckPermissionMiddlewareResp) Size() (n int) {
+	if x == nil {
+		return n
+	}
+	n += x.sizeField1()
+	n += x.sizeField2()
+	return n
+}
+
+func (x *CheckPermissionMiddlewareResp) sizeField1() (n int) {
+	if x.UserPermissions == 0 {
+		return n
+	}
+	n += fastpb.SizeInt32(1, x.GetUserPermissions())
+	return n
+}
+
+func (x *CheckPermissionMiddlewareResp) sizeField2() (n int) {
+	if x.ResponseStatus == nil {
+		return n
+	}
+	n += fastpb.SizeMessage(2, x.GetResponseStatus())
+	return n
+}
+
 var fieldIDToName_ResponseStatus = map[int32]string{
 	1: "Status",
 	2: "Message",
@@ -1326,4 +1473,13 @@ var fieldIDToName_GetUserResp = map[int32]string{
 	5: "UpdatedAt",
 	6: "UserPermissions",
 	7: "ResponseStatus",
+}
+
+var fieldIDToName_CheckPermissionMiddlewareReq = map[int32]string{
+	1: "UserId",
+}
+
+var fieldIDToName_CheckPermissionMiddlewareResp = map[int32]string{
+	1: "UserPermissions",
+	2: "ResponseStatus",
 }

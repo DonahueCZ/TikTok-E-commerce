@@ -13,6 +13,8 @@ service UserService {
     UpdateUserResp UpdateUser(1: UpdateUserReq req) (api.post = "/updateuser")
     // 获取用户信息
     GetUserResp GetUser(1: GetUserReq req) (api.get = "/getuser")
+    // 检查权限
+    CheckPermissionMiddlewareResp CheckPermissionMiddleware(1: CheckPermissionMiddlewareReq req)
 }
 
 
@@ -85,4 +87,11 @@ struct GetUserResp {
     7: ResponseStatus response_status
 }
 
+struct CheckPermissionMiddlewareReq{
+    1 : i64 user_id
+}
 
+struct CheckPermissionMiddlewareResp{
+    1 : i32 user_permissions
+    2 : ResponseStatus response_status
+}

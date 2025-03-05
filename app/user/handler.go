@@ -50,3 +50,10 @@ func (s *UserServiceImpl) GetUser(ctx context.Context, req *user.GetUserReq) (re
 
 	return resp, err
 }
+
+// CheckPermissionMiddleware implements the UserServiceImpl interface.
+func (s *UserServiceImpl) CheckPermissionMiddleware(ctx context.Context, req *user.CheckPermissionMiddlewareReq) (resp *user.CheckPermissionMiddlewareResp, err error) {
+	resp, err = service.NewCheckPermissionMiddlewareService(ctx).Run(req)
+
+	return resp, err
+}

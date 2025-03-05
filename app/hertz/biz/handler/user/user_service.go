@@ -130,3 +130,25 @@ func GetUser(ctx context.Context, c *app.RequestContext) {
 	}
 	c.JSON(consts.StatusOK, resp)
 }
+
+// CheckPermissionMiddleware .
+// @router /permission [GET]
+func CheckPermissionMiddleware() app.HandlerFunc {
+	return func(ctx context.Context, c *app.RequestContext) {
+		// todo edit your code
+		var err error
+		var req user.CheckPermissionMiddlewareReq
+		err = c.BindAndValidate(&req)
+		if err != nil {
+			c.String(400, err.Error())
+			return
+		}
+		resp := &user.CheckPermissionMiddlewareResp{}
+		resp, err = service.NewCheckPermissionMiddlewareService(ctx, c).Run(&req)
+		if err != nil {
+			utils.SendErrResponse(ctx, c, consts.StatusOK, err)
+			return
+		}
+		c.JSON(consts.StatusOK, resp)
+	}
+}

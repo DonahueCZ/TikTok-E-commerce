@@ -17,6 +17,8 @@ service UserService {
   rpc UpdateUser(UpdateUserReq) returns (UpdateUserResp) {}
   //获取用户信息
   rpc GetUser(GetUserReq) returns (GetUserResp) {}
+  //获取用户权限
+  rpc CheckPermissionMiddleware(CheckPermissionMiddlewareReq) returns (CheckPermissionMiddlewareResp) {}
 }
 
 message ResponseStatus {
@@ -86,4 +88,12 @@ message GetUserResp{
   string updated_at = 5;
   int32 user_permissions = 6;
   ResponseStatus response_status = 7;
+}
+
+message CheckPermissionMiddlewareReq{
+  int64 user_id = 1;
+}
+message CheckPermissionMiddlewareResp{
+  int32 user_permissions = 1;
+  ResponseStatus response_status = 2;
 }

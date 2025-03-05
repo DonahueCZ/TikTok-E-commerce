@@ -60,3 +60,12 @@ func GetUser(ctx context.Context, req *user.GetUserReq, callOptions ...callopt.O
 	}
 	return resp, nil
 }
+
+func CheckPermissionMiddleware(ctx context.Context, req *user.CheckPermissionMiddlewareReq, callOptions ...callopt.Option) (resp *user.CheckPermissionMiddlewareResp, err error) {
+	resp, err = defaultClient.CheckPermissionMiddleware(ctx, req, callOptions...)
+	if err != nil {
+		klog.CtxErrorf(ctx, "CheckPermissionMiddleware call failed,err =%+v", err)
+		return nil, err
+	}
+	return resp, nil
+}

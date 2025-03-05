@@ -256,3 +256,4 @@ func (dao *UserDAO) GetUserPermissions(ctx context.Context, userid int64) (int32
 	}
 	return user.UserPermissions, nil
 }
+

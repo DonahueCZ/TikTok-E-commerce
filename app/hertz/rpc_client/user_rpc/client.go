@@ -27,6 +27,7 @@ func GetUserRpcClient() (cli userservice.Client, err error) {
 
 // init etcd
 func InitUserRpcClient() {
+
 	conf := config.GetConf()
 	r, err := etcdRegistry.NewEtcdResolver(conf.Registry.RegistryAddress)
 	if err != nil {

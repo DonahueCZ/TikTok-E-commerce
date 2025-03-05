@@ -17,6 +17,7 @@ type Client interface {
 	DeleteUser(ctx context.Context, Req *user.DeleteUserReq, callOptions ...callopt.Option) (r *user.DeleteUserResp, err error)
 	UpdateUser(ctx context.Context, Req *user.UpdateUserReq, callOptions ...callopt.Option) (r *user.UpdateUserResp, err error)
 	GetUser(ctx context.Context, Req *user.GetUserReq, callOptions ...callopt.Option) (r *user.GetUserResp, err error)
+	CheckPermissionMiddleware(ctx context.Context, Req *user.CheckPermissionMiddlewareReq, callOptions ...callopt.Option) (r *user.CheckPermissionMiddlewareResp, err error)
 }
 
 // NewClient creates a client for the service defined in IDL.
@@ -76,4 +77,9 @@ func (p *kUserServiceClient) UpdateUser(ctx context.Context, Req *user.UpdateUse
 func (p *kUserServiceClient) GetUser(ctx context.Context, Req *user.GetUserReq, callOptions ...callopt.Option) (r *user.GetUserResp, err error) {
 	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
 	return p.kClient.GetUser(ctx, Req)
+}
+
+func (p *kUserServiceClient) CheckPermissionMiddleware(ctx context.Context, Req *user.CheckPermissionMiddlewareReq, callOptions ...callopt.Option) (r *user.CheckPermissionMiddlewareResp, err error) {
+	ctx = client.NewCtxWithCallOptions(ctx, callOptions)
+	return p.kClient.CheckPermissionMiddleware(ctx, Req)
 }

@@ -57,6 +57,13 @@ var serviceMethods = map[string]kitex.MethodInfo{
 		false,
 		kitex.WithStreamingMode(kitex.StreamingUnary),
 	),
+	"CheckPermissionMiddleware": kitex.NewMethodInfo(
+		checkPermissionMiddlewareHandler,
+		newCheckPermissionMiddlewareArgs,
+		newCheckPermissionMiddlewareResult,
+		false,
+		kitex.WithStreamingMode(kitex.StreamingUnary),
+	),
 }
 
 var (
@@ -1041,6 +1048,159 @@ func (p *GetUserResult) GetResult() interface{} {
 	return p.Success
 }
 
+func checkPermissionMiddlewareHandler(ctx context.Context, handler interface{}, arg, result interface{}) error {
+	switch s := arg.(type) {
+	case *streaming.Args:
+		st := s.Stream
+		req := new(user.CheckPermissionMiddlewareReq)
+		if err := st.RecvMsg(req); err != nil {
+			return err
+		}
+		resp, err := handler.(user.UserService).CheckPermissionMiddleware(ctx, req)
+		if err != nil {
+			return err
+		}
+		return st.SendMsg(resp)
+	case *CheckPermissionMiddlewareArgs:
+		success, err := handler.(user.UserService).CheckPermissionMiddleware(ctx, s.Req)
+		if err != nil {
+			return err
+		}
+		realResult := result.(*CheckPermissionMiddlewareResult)
+		realResult.Success = success
+		return nil
+	default:
+		return errInvalidMessageType
+	}
+}
+func newCheckPermissionMiddlewareArgs() interface{} {
+	return &CheckPermissionMiddlewareArgs{}
+}
+
+func newCheckPermissionMiddlewareResult() interface{} {
+	return &CheckPermissionMiddlewareResult{}
+}
+
+type CheckPermissionMiddlewareArgs struct {
+	Req *user.CheckPermissionMiddlewareReq
+}
+
+func (p *CheckPermissionMiddlewareArgs) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+	if !p.IsSetReq() {
+		p.Req = new(user.CheckPermissionMiddlewareReq)
+	}
+	return p.Req.FastRead(buf, _type, number)
+}
+
+func (p *CheckPermissionMiddlewareArgs) FastWrite(buf []byte) (n int) {
+	if !p.IsSetReq() {
+		return 0
+	}
+	return p.Req.FastWrite(buf)
+}
+
+func (p *CheckPermissionMiddlewareArgs) Size() (n int) {
+	if !p.IsSetReq() {
+		return 0
+	}
+	return p.Req.Size()
+}
+
+func (p *CheckPermissionMiddlewareArgs) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetReq() {
+		return out, nil
+	}
+	return proto.Marshal(p.Req)
+}
+
+func (p *CheckPermissionMiddlewareArgs) Unmarshal(in []byte) error {
+	msg := new(user.CheckPermissionMiddlewareReq)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Req = msg
+	return nil
+}
+
+var CheckPermissionMiddlewareArgs_Req_DEFAULT *user.CheckPermissionMiddlewareReq
+
+func (p *CheckPermissionMiddlewareArgs) GetReq() *user.CheckPermissionMiddlewareReq {
+	if !p.IsSetReq() {
+		return CheckPermissionMiddlewareArgs_Req_DEFAULT
+	}
+	return p.Req
+}
+
+func (p *CheckPermissionMiddlewareArgs) IsSetReq() bool {
+	return p.Req != nil
+}
+
+func (p *CheckPermissionMiddlewareArgs) GetFirstArgument() interface{} {
+	return p.Req
+}
+
+type CheckPermissionMiddlewareResult struct {
+	Success *user.CheckPermissionMiddlewareResp
+}
+
+var CheckPermissionMiddlewareResult_Success_DEFAULT *user.CheckPermissionMiddlewareResp
+
+func (p *CheckPermissionMiddlewareResult) FastRead(buf []byte, _type int8, number int32) (n int, err error) {
+	if !p.IsSetSuccess() {
+		p.Success = new(user.CheckPermissionMiddlewareResp)
+	}
+	return p.Success.FastRead(buf, _type, number)
+}
+
+func (p *CheckPermissionMiddlewareResult) FastWrite(buf []byte) (n int) {
+	if !p.IsSetSuccess() {
+		return 0
+	}
+	return p.Success.FastWrite(buf)
+}
+
+func (p *CheckPermissionMiddlewareResult) Size() (n int) {
+	if !p.IsSetSuccess() {
+		return 0
+	}
+	return p.Success.Size()
+}
+
+func (p *CheckPermissionMiddlewareResult) Marshal(out []byte) ([]byte, error) {
+	if !p.IsSetSuccess() {
+		return out, nil
+	}
+	return proto.Marshal(p.Success)
+}
+
+func (p *CheckPermissionMiddlewareResult) Unmarshal(in []byte) error {
+	msg := new(user.CheckPermissionMiddlewareResp)
+	if err := proto.Unmarshal(in, msg); err != nil {
+		return err
+	}
+	p.Success = msg
+	return nil
+}
+
+func (p *CheckPermissionMiddlewareResult) GetSuccess() *user.CheckPermissionMiddlewareResp {
+	if !p.IsSetSuccess() {
+		return CheckPermissionMiddlewareResult_Success_DEFAULT
+	}
+	return p.Success
+}
+
+func (p *CheckPermissionMiddlewareResult) SetSuccess(x interface{}) {
+	p.Success = x.(*user.CheckPermissionMiddlewareResp)
+}
+
+func (p *CheckPermissionMiddlewareResult) IsSetSuccess() bool {
+	return p.Success != nil
+}
+
+func (p *CheckPermissionMiddlewareResult) GetResult() interface{} {
+	return p.Success
+}
+
 type kClient struct {
 	c client.Client
 }
@@ -1106,6 +1266,16 @@ func (p *kClient) GetUser(ctx context.Context, Req *user.GetUserReq) (r *user.Ge
 	_args.Req = Req
 	var _result GetUserResult
 	if err = p.c.Call(ctx, "GetUser", &_args, &_result); err != nil {
+		return
+	}
+	return _result.GetSuccess(), nil
+}
+
+func (p *kClient) CheckPermissionMiddleware(ctx context.Context, Req *user.CheckPermissionMiddlewareReq) (r *user.CheckPermissionMiddlewareResp, err error) {
+	var _args CheckPermissionMiddlewareArgs
+	_args.Req = Req
+	var _result CheckPermissionMiddlewareResult
+	if err = p.c.Call(ctx, "CheckPermissionMiddleware", &_args, &_result); err != nil {
 		return
 	}
 	return _result.GetSuccess(), nil

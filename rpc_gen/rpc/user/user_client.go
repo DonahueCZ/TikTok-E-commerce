@@ -18,6 +18,7 @@ type RPCClient interface {
 	DeleteUser(ctx context.Context, Req *user.DeleteUserReq, callOptions ...callopt.Option) (r *user.DeleteUserResp, err error)
 	UpdateUser(ctx context.Context, Req *user.UpdateUserReq, callOptions ...callopt.Option) (r *user.UpdateUserResp, err error)
 	GetUser(ctx context.Context, Req *user.GetUserReq, callOptions ...callopt.Option) (r *user.GetUserResp, err error)
+	CheckPermissionMiddleware(ctx context.Context, Req *user.CheckPermissionMiddlewareReq, callOptions ...callopt.Option) (r *user.CheckPermissionMiddlewareResp, err error)
 }
 
 func NewRPCClient(dstService string, opts ...client.Option) (RPCClient, error) {
@@ -68,4 +69,8 @@ func (c *clientImpl) UpdateUser(ctx context.Context, Req *user.UpdateUserReq, ca
 
 func (c *clientImpl) GetUser(ctx context.Context, Req *user.GetUserReq, callOptions ...callopt.Option) (r *user.GetUserResp, err error) {
 	return c.kitexClient.GetUser(ctx, Req, callOptions...)
+}
+
+func (c *clientImpl) CheckPermissionMiddleware(ctx context.Context, Req *user.CheckPermissionMiddlewareReq, callOptions ...callopt.Option) (r *user.CheckPermissionMiddlewareResp, err error) {
+	return c.kitexClient.CheckPermissionMiddleware(ctx, Req, callOptions...)
 }
